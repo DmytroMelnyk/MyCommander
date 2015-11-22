@@ -6,6 +6,5 @@
     <Application.Resources>
         <local:AttributeConverter x:Key="attrConverter"/>
         <local:FileSystemInfoWrapperToImage x:Key="fSIWToImageConverter"/>
-        <local:ScaleConverter x:Key="scaleConverter" />
     </Application.Resources>
 </Application>

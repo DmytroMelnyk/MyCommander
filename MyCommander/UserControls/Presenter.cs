@@ -14,9 +14,9 @@ namespace MyCommander.UserControls
 {
     class Presenter : INotifyPropertyChanged, IDisposable
     {
-        ObservableCollection<FileSystemInfoWrapper> drives = new ObservableCollection<FileSystemInfoWrapper>(DriveInfo.GetDrives().Select(item => new FileSystemInfoWrapper(item.Name)));
+        ObservableCollection<DriveInfo> drives = new ObservableCollection<DriveInfo>(DriveInfo.GetDrives());
 
-        public ObservableCollection<FileSystemInfoWrapper> Drives
+        public ObservableCollection<DriveInfo> Drives
         {
             get { return drives; }
         }

@@ -13,6 +13,9 @@ namespace MyCommander
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
+            if (value is DriveInfo)
+                return FolderManager.GetImageSource(value.ToString(), ItemState.Undefined);
+
             FileSystemInfoWrapper fsi = (FileSystemInfoWrapper)value;
             return fsi.IsDirectory ? FolderManager.GetImageSource(fsi.FullName, ItemState.Undefined) :
                 FileManager.GetImageSource(fsi.FullName);
@@ -91,21 +94,4 @@ namespace MyCommander
             throw new NotImplementedException();
         }
     }
-
-    public class ScaleConverter : IValueConverter
-    {
-
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            double val = (double)value;
-            double scaleFactor = (double)parameter;
-            return val * scaleFactor;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
 }
