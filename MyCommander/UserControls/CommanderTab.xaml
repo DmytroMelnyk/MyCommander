@@ -1,0 +1,178 @@
+﻿<UserControl x:Class="MyCommander.UserControls.CommanderTab"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
+             xmlns:local="clr-namespace:MyCommander"
+             xmlns:util="clr-namespace:Wpf.Util"
+             xmlns:cm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+             xmlns:io="clr-namespace:System.IO;assembly=mscorlib"
+             mc:Ignorable="d"
+             d:DesignHeight="300"
+             d:DesignWidth="300">
+
+    <UserControl.CommandBindings>
+        <CommandBinding Command="local:CustomCommands.ChangeDisk"
+                        Executed="CommandBinding_Executed" />
+    </UserControl.CommandBindings>
+
+    <UserControl.Resources>
+
+        <Style TargetType="{x:Type TextBlock}">
+            <Setter Property="FontSize"
+                    Value="12" />
+            <Setter Property="FontFamily"
+                    Value="Times New Roman" />
+        </Style>
+
+        <!--<ObjectDataProvider x:Key="objDataProv" MethodName="GetImageSource" ObjectType="{x:Type local:FolderManager}">
+            <ObjectDataProvider.MethodParameters>
+                <system:String>C:\AMD</system:String>
+                <local:ItemState>Undefined</local:ItemState>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>-->
+
+        <!--<Style x:Key="nameFieldStyle" TargetType="{x:Type TextBlock}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=FDIType, Mode=OneTime}" Value="File">
+                    <Setter Property="Text" Value="FF"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=FDIType, Mode=OneTime}" Value="Directory">
+                    <Setter Property="Text" Value="DD"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=FDIType, Mode=OneTime}" Value="CurrentDirectory">
+                    <Setter Property="Text" Value=".."/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>-->
+
+        <!--We can use Triggers instead of TemplateSelector, because
+            we have same objects as template-->
+        <local:MyTemplateSelector x:Key="nameFieldTemplate">
+            <local:MyTemplateSelector.CurrentDirectory>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <Image /> 
+                        <TextBlock Text=".." />
+                    </StackPanel>
+                </DataTemplate>
+            </local:MyTemplateSelector.CurrentDirectory>
+            <local:MyTemplateSelector.Directory>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{Binding Converter={StaticResource fSIWToImageConverter}}" />
+                        <TextBlock Text="{Binding Name}" />
+                    </StackPanel>
+                </DataTemplate>
+            </local:MyTemplateSelector.Directory>
+            <local:MyTemplateSelector.File>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{Binding Converter={StaticResource fSIWToImageConverter}}" />
+                        <TextBlock Text="{Binding Name}" />
+                    </StackPanel>
+                </DataTemplate>
+            </local:MyTemplateSelector.File>
+        </local:MyTemplateSelector>
+
+    </UserControl.Resources>
+
+    <DockPanel>
+
+        <ToolBarTray DockPanel.Dock="Top">
+            <ToolBar ItemsSource="{Binding Drives}">
+                <ToolBar.ItemTemplate>
+                    <ItemContainerTemplate>
+                        <Button Command="local:CustomCommands.ChangeDisk"
+                                CommandParameter="{Binding Name}">
+                            <Button.Content>
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="{Binding Converter={StaticResource fSIWToImageConverter}}" />
+                                    <TextBlock Text="{Binding Name}" />
+                                    <ProgressBar Value="{Binding TotalFreeSpace, Mode=OneTime}"
+                                                 Maximum="{Binding TotalSize, Mode=OneTime}"
+                                                 Width="20">
+                                        <ProgressBar.Template>
+                                            <ControlTemplate TargetType="{x:Type ProgressBar}">
+                                                <Canvas VerticalAlignment="Stretch"
+                                                        HorizontalAlignment="Stretch">
+                                                    <Rectangle x:Name="PART_Indicator"
+                                                               Fill="DarkBlue"
+                                                               Width="10"
+                                                               Height="{TemplateBinding Maximum}">
+                                                        <Rectangle.RenderTransform>
+                                                            <ScaleTransform ScaleX="1"
+                                                                            ScaleY="0.0000000001" />
+                                                        </Rectangle.RenderTransform>
+                                                    </Rectangle>
+                                                    <Rectangle x:Name="PART_Track"
+                                                               Fill="Aqua"
+                                                               Width="10"
+                                                               Height="{TemplateBinding Value}">
+                                                        <Rectangle.RenderTransform>
+                                                            <ScaleTransform ScaleX="1"
+                                                                            ScaleY="0.0000000001" />
+                                                        </Rectangle.RenderTransform>
+                                                    </Rectangle>
+                                                    <ContentPresenter />
+                                                </Canvas>
+                                            </ControlTemplate>
+                                        </ProgressBar.Template>
+                                    </ProgressBar>
+                                </StackPanel>
+                            </Button.Content>
+                        </Button>
+                    </ItemContainerTemplate>
+                </ToolBar.ItemTemplate>
+            </ToolBar>
+        </ToolBarTray>
+
+        <TextBox DockPanel.Dock="Top"
+                 Text="{Binding CurrentDirectory}" />
+        <ListView ItemsSource="{Binding FDICollection}"
+                  MouseDoubleClick="ListView_MouseDoubleClick"
+                  util:GridViewSort.AutoSort="True">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Name"
+                                    CellTemplateSelector="{StaticResource nameFieldTemplate}"
+                                    util:GridViewSort.PropertyName="Name" />
+                    <GridViewColumn Header="Type"
+                                    DisplayMemberBinding="{Binding Extension}"
+                                    util:GridViewSort.PropertyName="Extension" />
+                    <GridViewColumn Header="Size"
+                                    util:GridViewSort.PropertyName="Length">
+                        <GridViewColumn.CellTemplate>
+                            <ItemContainerTemplate>
+                                <TextBlock>
+                                    <TextBlock.Style>
+                                        <Style>
+                                            <Setter Property="TextBlock.Text"
+                                                    Value="{Binding Length}" />
+                                            <!--Value set by default-->
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Length, Mode=OneTime}"
+                                                             Value="{x:Null}">
+                                                    <Setter Property="TextBlock.Text"
+                                                            Value="&lt;DIR&gt;" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </ItemContainerTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Date"
+                                    DisplayMemberBinding="{Binding CreationTime, StringFormat=d}"
+                                    util:GridViewSort.PropertyName="CreationTime" />
+                    <GridViewColumn Header="Attributes"
+                                    DisplayMemberBinding="{Binding Attributes, Converter={StaticResource attrConverter}}"
+                                    util:GridViewSort.PropertyName="Attributes" />
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </DockPanel>
+
+</UserControl>
