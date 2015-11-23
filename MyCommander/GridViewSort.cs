@@ -5,6 +5,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using System.Linq;
 
 namespace Wpf.Util
 {
@@ -128,7 +129,22 @@ namespace Wpf.Util
                         }
                         else if (GetAutoSort(listView))
                         {
-                            ApplySort(listView.Items, propertyName);
+                            // check propertyName equal to null
+                            var currentSort = listView.Items.SortDescriptions.FirstOrDefault(current => current.PropertyName == propertyName);
+                            ListSortDirection direction = ListSortDirection.Ascending;
+                            if (currentSort.PropertyName == null)
+                            {
+                                var allProperties = (listView.View as GridView).Columns.Select(column => GetPropertyName(column));
+                                currentSort = listView.Items.SortDescriptions.Join(allProperties, outerKey => outerKey.PropertyName, innerKey => innerKey, (resSel, _) => resSel).SingleOrDefault();
+                            }
+                            else
+                            {
+                                direction = (currentSort.Direction == ListSortDirection.Ascending) ?
+                                    ListSortDirection.Descending : ListSortDirection.Ascending;
+                            }
+                            listView.Items.SortDescriptions.Remove(currentSort);
+                            listView.Items.SortDescriptions.Add(new SortDescription(propertyName, direction));
+                            //ApplySort(listView.Items, propertyName);
                         }
                     }
                 }
@@ -226,21 +242,21 @@ namespace Wpf.Util
 
         public static void ApplySort(ICollectionView view, string propertyName)
         {
-            ListSortDirection direction = ListSortDirection.Ascending;
-            if (view.SortDescriptions.Count > 0)
-            {
-                SortDescription currentSort = view.SortDescriptions[0];
-                if (currentSort.PropertyName == propertyName)
-                {
-                    direction = (currentSort.Direction == ListSortDirection.Ascending) ?
-                        ListSortDirection.Descending : ListSortDirection.Ascending;
-                }
-                view.SortDescriptions.Clear();
-            }
-            if (!string.IsNullOrEmpty(propertyName))
-            {
-                view.SortDescriptions.Add(new SortDescription(propertyName, direction));
-            }
+            //ListSortDirection direction = ListSortDirection.Ascending;
+            //if (view.SortDescriptions.FirstOrDefault(currentSort => currentSort.PropertyName == propertyName))
+            //{
+            //    SortDescription currentSort = view.SortDescriptions[2];
+            //    if (currentSort.PropertyName == propertyName)
+            //    {
+            //        direction = (currentSort.Direction == ListSortDirection.Ascending) ?
+            //            ListSortDirection.Descending : ListSortDirection.Ascending;
+            //    }
+            //    view.SortDescriptions.Clear();
+            //}
+            //if (!string.IsNullOrEmpty(propertyName))
+            //{
+            //    view.SortDescriptions.Add(new SortDescription(propertyName, direction));
+            //}
         }
 
         #endregion

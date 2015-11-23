@@ -58,7 +58,6 @@
     <Compile Include="CustomCommands.cs" />
     <Compile Include="GridViewSort.cs" />
     <Compile Include="Managers.cs" />
-    <Compile Include="MyTemplateSelector.cs" />
     <Compile Include="UserControls\CommanderTab.xaml.cs">
       <DependentUpon>CommanderTab.xaml</DependentUpon>
     </Compile>

@@ -18,7 +18,6 @@
     </UserControl.CommandBindings>
 
     <UserControl.Resources>
-
         <Style TargetType="{x:Type TextBlock}">
             <Setter Property="FontSize"
                     Value="12" />
@@ -26,60 +25,19 @@
                     Value="Times New Roman" />
         </Style>
 
-        <!--<ObjectDataProvider x:Key="objDataProv" MethodName="GetImageSource" ObjectType="{x:Type local:FolderManager}">
-            <ObjectDataProvider.MethodParameters>
-                <system:String>C:\AMD</system:String>
-                <local:ItemState>Undefined</local:ItemState>
-            </ObjectDataProvider.MethodParameters>
-        </ObjectDataProvider>-->
-
-        <!--<Style x:Key="nameFieldStyle" TargetType="{x:Type TextBlock}">
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding Path=FDIType, Mode=OneTime}" Value="File">
-                    <Setter Property="Text" Value="FF"/>
-                </DataTrigger>
-                <DataTrigger Binding="{Binding Path=FDIType, Mode=OneTime}" Value="Directory">
-                    <Setter Property="Text" Value="DD"/>
-                </DataTrigger>
-                <DataTrigger Binding="{Binding Path=FDIType, Mode=OneTime}" Value="CurrentDirectory">
-                    <Setter Property="Text" Value=".."/>
-                </DataTrigger>
-            </Style.Triggers>
-        </Style>-->
-
-        <!--We can use Triggers instead of TemplateSelector, because
-            we have same objects as template-->
-        <local:MyTemplateSelector x:Key="nameFieldTemplate">
-            <local:MyTemplateSelector.CurrentDirectory>
-                <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
-                        <Image /> 
-                        <TextBlock Text=".." />
-                    </StackPanel>
-                </DataTemplate>
-            </local:MyTemplateSelector.CurrentDirectory>
-            <local:MyTemplateSelector.Directory>
-                <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="{Binding Converter={StaticResource fSIWToImageConverter}}" />
-                        <TextBlock Text="{Binding Name}" />
-                    </StackPanel>
-                </DataTemplate>
-            </local:MyTemplateSelector.Directory>
-            <local:MyTemplateSelector.File>
-                <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="{Binding Converter={StaticResource fSIWToImageConverter}}" />
-                        <TextBlock Text="{Binding Name}" />
-                    </StackPanel>
-                </DataTemplate>
-            </local:MyTemplateSelector.File>
-        </local:MyTemplateSelector>
-
+        <CollectionViewSource x:Key="collection"
+                              xmlns:cm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+                              Source="{Binding FDICollection}">
+            <CollectionViewSource.SortDescriptions>
+                <cm:SortDescription PropertyName="IsCurrentDirectory"
+                                    Direction="Descending" />
+                <cm:SortDescription PropertyName="IsDirectory"
+                                    Direction="Descending" />
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
     </UserControl.Resources>
 
     <DockPanel>
-
         <ToolBarTray DockPanel.Dock="Top">
             <ToolBar ItemsSource="{Binding Drives}">
                 <ToolBar.ItemTemplate>
@@ -130,14 +88,36 @@
 
         <TextBox DockPanel.Dock="Top"
                  Text="{Binding CurrentDirectory}" />
-        <ListView ItemsSource="{Binding FDICollection}"
+        <ListView ItemsSource="{Binding Source={StaticResource collection}}"
                   MouseDoubleClick="ListView_MouseDoubleClick"
                   util:GridViewSort.AutoSort="True">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Name"
-                                    CellTemplateSelector="{StaticResource nameFieldTemplate}"
-                                    util:GridViewSort.PropertyName="Name" />
+                                    util:GridViewSort.PropertyName="Name">
+                        <GridViewColumn.CellTemplate>
+                            <ItemContainerTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Image>
+                                        <Image.Style>
+                                            <Style TargetType="{x:Type Image}">
+                                                <Setter Property="Source"
+                                                        Value="{Binding Converter={StaticResource fSIWToImageConverter}}" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsCurrentDirectory}"
+                                                                 Value="True">
+                                                        <Setter Property="Source"
+                                                                Value="{x:Null}" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Image.Style>
+                                    </Image>
+                                    <TextBlock Text="{Binding Name}" />
+                                </StackPanel>
+                            </ItemContainerTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                     <GridViewColumn Header="Type"
                                     DisplayMemberBinding="{Binding Extension}"
                                     util:GridViewSort.PropertyName="Extension" />
