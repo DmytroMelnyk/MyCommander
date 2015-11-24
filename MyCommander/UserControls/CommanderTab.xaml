@@ -6,7 +6,6 @@
              xmlns:system="clr-namespace:System;assembly=mscorlib"
              xmlns:local="clr-namespace:MyCommander"
              xmlns:util="clr-namespace:Wpf.Util"
-             xmlns:cm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              xmlns:io="clr-namespace:System.IO;assembly=mscorlib"
              mc:Ignorable="d"
              d:DesignHeight="300"
@@ -35,6 +34,41 @@
                                     Direction="Descending" />
             </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
+
+        <ItemContainerTemplate x:Key="itemTemplate">
+            <StackPanel Orientation="Horizontal">
+                <Image>
+                    <Image.Style>
+                        <Style TargetType="{x:Type Image}">
+                            <Setter Property="Source"
+                                    Value="{Binding Converter={StaticResource fSIWToImageConverter}}" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsCurrentDirectory}"
+                                             Value="True">
+                                    <Setter Property="Source"
+                                            Value="{x:Null}" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Image.Style>
+                </Image>
+                <TextBlock>
+                    <TextBlock.Style>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Setter Property="Text"
+                                    Value="{Binding Name}" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsCurrentDirectory}"
+                                             Value="True">
+                                    <Setter Property="Text"
+                                            Value=".." />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+            </StackPanel>
+        </ItemContainerTemplate>
     </UserControl.Resources>
 
     <DockPanel>
@@ -94,30 +128,8 @@
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Name"
-                                    util:GridViewSort.PropertyName="Name">
-                        <GridViewColumn.CellTemplate>
-                            <ItemContainerTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <Image>
-                                        <Image.Style>
-                                            <Style TargetType="{x:Type Image}">
-                                                <Setter Property="Source"
-                                                        Value="{Binding Converter={StaticResource fSIWToImageConverter}}" />
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding IsCurrentDirectory}"
-                                                                 Value="True">
-                                                        <Setter Property="Source"
-                                                                Value="{x:Null}" />
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Image.Style>
-                                    </Image>
-                                    <TextBlock Text="{Binding Name}" />
-                                </StackPanel>
-                            </ItemContainerTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
+                                    util:GridViewSort.PropertyName="Name"
+                                    CellTemplate="{Binding Source={StaticResource itemTemplate}}" />
                     <GridViewColumn Header="Type"
                                     DisplayMemberBinding="{Binding Extension}"
                                     util:GridViewSort.PropertyName="Extension" />

@@ -144,7 +144,6 @@ namespace Wpf.Util
                             }
                             listView.Items.SortDescriptions.Remove(currentSort);
                             listView.Items.SortDescriptions.Add(new SortDescription(propertyName, direction));
-                            //ApplySort(listView.Items, propertyName);
                         }
                     }
                 }
@@ -238,25 +237,6 @@ namespace Wpf.Util
                 targetParent = reference as T;
             } while (targetParent == null);
             return targetParent;
-        }
-
-        public static void ApplySort(ICollectionView view, string propertyName)
-        {
-            //ListSortDirection direction = ListSortDirection.Ascending;
-            //if (view.SortDescriptions.FirstOrDefault(currentSort => currentSort.PropertyName == propertyName))
-            //{
-            //    SortDescription currentSort = view.SortDescriptions[2];
-            //    if (currentSort.PropertyName == propertyName)
-            //    {
-            //        direction = (currentSort.Direction == ListSortDirection.Ascending) ?
-            //            ListSortDirection.Descending : ListSortDirection.Ascending;
-            //    }
-            //    view.SortDescriptions.Clear();
-            //}
-            //if (!string.IsNullOrEmpty(propertyName))
-            //{
-            //    view.SortDescriptions.Add(new SortDescription(propertyName, direction));
-            //}
         }
 
         #endregion
