@@ -10,9 +10,9 @@
                 <ColumnDefinition Width="5" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <local:CommanderTab Grid.Column="0"/>
+            <local:CommanderTab x:Name="tab1" Grid.Column="0"/>
             <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch"/>
-            <local:CommanderTab Grid.Column="2"/>
+            <local:CommanderTab x:Name="tab2" Grid.Column="2"/>
         </Grid>
     </DockPanel>
 </Window>

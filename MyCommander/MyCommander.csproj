@@ -58,11 +58,11 @@
     <Compile Include="CustomCommands.cs" />
     <Compile Include="GridViewSort.cs" />
     <Compile Include="Managers.cs" />
+    <Compile Include="ObservableDirectory.cs" />
     <Compile Include="UserControls\CommanderTab.xaml.cs">
       <DependentUpon>CommanderTab.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\FDWrapper.cs" />
-    <Compile Include="UserControls\Model.cs" />
     <Compile Include="UserControls\Presenter.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -107,6 +107,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ViewModels\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -14,6 +14,11 @@ namespace MyCommander.UserControls
 {
     class Presenter : INotifyPropertyChanged, IDisposable
     {
+        public Presenter(string currentDirectory)
+        {
+            CurrentDirectory = currentDirectory;
+        }
+
         ObservableCollection<DriveInfo> drives = new ObservableCollection<DriveInfo>(DriveInfo.GetDrives());
 
         public ObservableCollection<DriveInfo> Drives
@@ -21,8 +26,8 @@ namespace MyCommander.UserControls
             get { return drives; }
         }
 
-        ObservableCollection<FileSystemInfoWrapper> _FDICollection;
-        public ObservableCollection<FileSystemInfoWrapper> FDICollection
+        ObservableDirectory _FDICollection;
+        public ObservableDirectory FDICollection
         {
             get { return _FDICollection; }
             set
@@ -35,32 +40,6 @@ namespace MyCommander.UserControls
             }
         }
 
-        Model _model;
-        Model Model
-        {
-            get { return _model; }
-            set
-            {
-                if (_model == value)
-                    return;
-
-                if (_model != null)
-                    _model.Dispose();
-
-                _model = value;
-                FDICollection = new ObservableCollection<FileSystemInfoWrapper>(_model.FDIs);
-                BindingOperations.EnableCollectionSynchronization(FDICollection, _locker);
-
-                CurrentDirectory = _model.CurrentDirectory.FullName;
-                WeakEventManager<FileSystemWatcher, FileSystemEventArgs>.AddHandler(_model.CurrentDirectoryWatcher, "Created", fsw_Created);
-                WeakEventManager<FileSystemWatcher, FileSystemEventArgs>.AddHandler(_model.CurrentDirectoryWatcher, "Changed", fsw_Changed);
-                WeakEventManager<FileSystemWatcher, FileSystemEventArgs>.AddHandler(_model.CurrentDirectoryWatcher, "Deleted", fsw_Deleted);
-                WeakEventManager<FileSystemWatcher, RenamedEventArgs>.AddHandler(_model.CurrentDirectoryWatcher, "Renamed", fsw_Renamed);
-            }
-        }
-
-        private object _locker = new object();
-
         string _currentDirectory;
         public string CurrentDirectory 
         {
@@ -70,38 +49,12 @@ namespace MyCommander.UserControls
                 if (_currentDirectory != value && Directory.Exists(value))
                 {
                     _currentDirectory = value;
-                    Model = new Model(_currentDirectory);
+                    if (FDICollection != null)
+                        FDICollection.Dispose();
+                    FDICollection = new ObservableDirectory(new DirectoryInfo(_currentDirectory));
                     OnPropertyChanged();
                 }
             }
-        }
-
-        public Presenter(Model model)
-        {
-            Model = model;
-        }
-
-        void fsw_Renamed(object sender, RenamedEventArgs e)
-        {
-            FDICollection.Remove(new FileSystemInfoWrapper(e.OldFullPath));
-            FDICollection.Add(new FileSystemInfoWrapper(e.FullPath));
-        }
-
-        void fsw_Deleted(object sender, FileSystemEventArgs e)
-        {
-            FDICollection.Remove(new FileSystemInfoWrapper(e.FullPath));
-        }
-
-        void fsw_Created(object sender, FileSystemEventArgs e)
-        {
-            if (!FDICollection.Any(item => item.FullName == e.FullPath))
-                FDICollection.Add(new FileSystemInfoWrapper(e.FullPath));
-        }
-
-        void fsw_Changed(object sender, FileSystemEventArgs e)
-        {
-            FDICollection.Remove(new FileSystemInfoWrapper(e.FullPath));
-            FDICollection.Add(new FileSystemInfoWrapper(e.FullPath));
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -113,7 +66,8 @@ namespace MyCommander.UserControls
 
         public void Dispose()
         {
-            _model.Dispose();
+            if (_FDICollection != null)
+                _FDICollection.Dispose();
         }
     }
 }

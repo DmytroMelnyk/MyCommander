@@ -24,11 +24,11 @@ namespace MyCommander.UserControls
         public CommanderTab()
         {
             InitializeComponent();
-            DataContext = new Presenter(new Model());
         }
 
         private void ListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
+            var aaa = this.Name;
             ListView lv = e.Source as ListView;
             if (lv == null)
                 return;
@@ -44,19 +44,6 @@ namespace MyCommander.UserControls
             }
             else
             {
-                //var bbb = FileAssoc.FindExecutable(fdi.FullName);
-                //var ccc = FileAssoc.GetExecutable(fdi.FullName);
-                //string aaa = FileAssociation.GetExecFileAssociatedToExtension(Path.GetExtension(fdi.FullName));
-
-                //if (Path.GetExtension(aaa) == ".dll")
-                //{
-                //    string formattedVal = String.Format("\"{0}\", ImageView_Fullscreen {1}", aaa, fdi.FullName);
-                //    System.Diagnostics.Process.Start("rundll32", formattedVal);
-                //}
-                //else if (!String.IsNullOrEmpty(aaa))
-                //{
-                //    System.Diagnostics.Process.Start(aaa, fdi.FullName);
-                //}
                 Process.Start(fdi.FullName);
             }
         }
@@ -64,13 +51,18 @@ namespace MyCommander.UserControls
         private void CollectionViewSource_Filter(object sender, FilterEventArgs e)
         {
             FileSystemInfoWrapper fdi = (FileSystemInfoWrapper)e.Item;
-            e.Accepted = true; //Path.GetExtension(fdi.FullName) == ".txt";
+            e.Accepted = true;
         }
 
         private void CommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             Presenter presenter = (Presenter)DataContext;
             presenter.CurrentDirectory = (string)e.Parameter;
+        }
+
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            DataContext = new Presenter("C:\\");
         }
     }
 }
