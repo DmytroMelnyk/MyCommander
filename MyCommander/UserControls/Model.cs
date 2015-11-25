@@ -18,7 +18,9 @@ namespace MyCommander.UserControls
             _di = new DirectoryInfo(diName);
             _fsw = new FileSystemWatcher(diName)
             {
-                EnableRaisingEvents = true
+                EnableRaisingEvents = true,
+                IncludeSubdirectories = false,
+                NotifyFilter = NotifyFilters.FileName
             };
         }
 

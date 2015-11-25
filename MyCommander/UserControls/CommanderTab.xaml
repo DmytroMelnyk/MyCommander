@@ -84,31 +84,21 @@
                                     <TextBlock Text="{Binding Name}" />
                                     <ProgressBar Value="{Binding TotalFreeSpace, Mode=OneTime}"
                                                  Maximum="{Binding TotalSize, Mode=OneTime}"
+                                                 Background="Green"
+                                                 Foreground="White"
                                                  Width="20">
                                         <ProgressBar.Template>
                                             <ControlTemplate TargetType="{x:Type ProgressBar}">
-                                                <Canvas VerticalAlignment="Stretch"
-                                                        HorizontalAlignment="Stretch">
-                                                    <Rectangle x:Name="PART_Indicator"
-                                                               Fill="DarkBlue"
-                                                               Width="10"
-                                                               Height="{TemplateBinding Maximum}">
-                                                        <Rectangle.RenderTransform>
-                                                            <ScaleTransform ScaleX="1"
-                                                                            ScaleY="0.0000000001" />
-                                                        </Rectangle.RenderTransform>
-                                                    </Rectangle>
-                                                    <Rectangle x:Name="PART_Track"
-                                                               Fill="Aqua"
-                                                               Width="10"
-                                                               Height="{TemplateBinding Value}">
-                                                        <Rectangle.RenderTransform>
-                                                            <ScaleTransform ScaleX="1"
-                                                                            ScaleY="0.0000000001" />
-                                                        </Rectangle.RenderTransform>
-                                                    </Rectangle>
-                                                    <ContentPresenter />
-                                                </Canvas>
+                                                <Border Name="PART_Track"
+                                                        Width="{TemplateBinding Width}"
+                                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                                        Background="{TemplateBinding Background}">
+                                                    <Rectangle Name="PART_Indicator"
+                                                               HorizontalAlignment="Right"
+                                                               Fill="{TemplateBinding Foreground}"
+                                                               Height="{TemplateBinding Height}" />
+                                                </Border>
                                             </ControlTemplate>
                                         </ProgressBar.Template>
                                     </ProgressBar>
@@ -131,22 +121,40 @@
                                     util:GridViewSort.PropertyName="Name"
                                     CellTemplate="{Binding Source={StaticResource itemTemplate}}" />
                     <GridViewColumn Header="Type"
-                                    DisplayMemberBinding="{Binding Extension}"
-                                    util:GridViewSort.PropertyName="Extension" />
+                                    util:GridViewSort.PropertyName="Extension">
+                        <GridViewColumn.CellTemplate>
+                            <ItemContainerTemplate>
+                                <TextBlock>
+                                    <TextBlock.Style>
+                                        <Style TargetType="{x:Type TextBlock}">
+                                            <Setter Property="Text"
+                                                    Value="{Binding Extension}" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsDirectory, Mode=OneTime}"
+                                                             Value="True">
+                                                    <Setter Property="Text"
+                                                            Value="" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </ItemContainerTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                     <GridViewColumn Header="Size"
                                     util:GridViewSort.PropertyName="Length">
                         <GridViewColumn.CellTemplate>
                             <ItemContainerTemplate>
                                 <TextBlock>
                                     <TextBlock.Style>
-                                        <Style>
-                                            <Setter Property="TextBlock.Text"
-                                                    Value="{Binding Length}" />
-                                            <!--Value set by default-->
+                                        <Style TargetType="{x:Type TextBlock}">
+                                            <Setter Property="Text"
+                                                    Value="{Binding Length, StringFormat=N0}" />
                                             <Style.Triggers>
-                                                <DataTrigger Binding="{Binding Length, Mode=OneTime}"
-                                                             Value="{x:Null}">
-                                                    <Setter Property="TextBlock.Text"
+                                                <DataTrigger Binding="{Binding IsDirectory, Mode=OneTime}"
+                                                             Value="True">
+                                                    <Setter Property="Text"
                                                             Value="&lt;DIR&gt;" />
                                                 </DataTrigger>
                                             </Style.Triggers>

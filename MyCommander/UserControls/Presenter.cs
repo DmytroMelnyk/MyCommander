@@ -50,6 +50,7 @@ namespace MyCommander.UserControls
                 _model = value;
                 FDICollection = new ObservableCollection<FileSystemInfoWrapper>(_model.FDIs);
                 BindingOperations.EnableCollectionSynchronization(FDICollection, _locker);
+
                 CurrentDirectory = _model.CurrentDirectory.FullName;
                 WeakEventManager<FileSystemWatcher, FileSystemEventArgs>.AddHandler(_model.CurrentDirectoryWatcher, "Created", fsw_Created);
                 WeakEventManager<FileSystemWatcher, FileSystemEventArgs>.AddHandler(_model.CurrentDirectoryWatcher, "Changed", fsw_Changed);
@@ -93,7 +94,8 @@ namespace MyCommander.UserControls
 
         void fsw_Created(object sender, FileSystemEventArgs e)
         {
-            FDICollection.Add(new FileSystemInfoWrapper(e.FullPath));
+            if (!FDICollection.Any(item => item.FullName == e.FullPath))
+                FDICollection.Add(new FileSystemInfoWrapper(e.FullPath));
         }
 
         void fsw_Changed(object sender, FileSystemEventArgs e)

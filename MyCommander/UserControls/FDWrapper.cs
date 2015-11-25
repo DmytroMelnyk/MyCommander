@@ -9,18 +9,14 @@ namespace MyCommander.UserControls
 {
     class FileSystemInfoWrapper : IEquatable<FileSystemInfoWrapper>
     {
-        public FileSystemInfoWrapper(string path, bool isCurrentDirectory = false)
+        public FileSystemInfoWrapper(string path, bool? isCurrentDirectory = null)
         {
             _fullPath = Path.GetFullPath(path);
             _isCurrentDirectory = isCurrentDirectory;
         }
 
-        public FileSystemInfoWrapper(FileSystemInfo fsi, bool isCurrentDirectory = false)
-        {
-            _fullPath = fsi.FullName;
-            _isCurrentDirectory = isCurrentDirectory;
-            _fsi = fsi;
-        }
+        public FileSystemInfoWrapper(FileSystemInfo fsi, bool? isCurrentDirectory = null) :
+            this(fsi.FullName, isCurrentDirectory) { }
 
         string _fullPath;
         public string FullName
@@ -28,7 +24,7 @@ namespace MyCommander.UserControls
             get { return _fullPath; }
         }
 
-        bool _isCurrentDirectory;
+        bool? _isCurrentDirectory;
         public bool? IsCurrentDirectory
         {
             get

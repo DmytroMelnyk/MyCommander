@@ -6,6 +6,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Linq;
+using System.Windows.Media.Media3D;
 
 namespace Wpf.Util
 {
@@ -233,7 +234,9 @@ namespace Wpf.Util
             T targetParent = null;
             do
             {
-                reference = VisualTreeHelper.GetParent(reference);
+                reference = (reference is Visual || reference is Visual3D) ? 
+                    VisualTreeHelper.GetParent(reference) : 
+                    LogicalTreeHelper.GetParent(reference);
                 targetParent = reference as T;
             } while (targetParent == null);
             return targetParent;
