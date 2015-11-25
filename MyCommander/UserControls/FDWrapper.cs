@@ -11,17 +11,17 @@ namespace MyCommander.UserControls
     {
         public FileSystemInfoWrapper(string path, bool? isCurrentDirectory = null)
         {
-            _fullPath = Path.GetFullPath(path);
+            FullName = Path.GetFullPath(path);
             _isCurrentDirectory = isCurrentDirectory;
         }
 
         public FileSystemInfoWrapper(FileSystemInfo fsi, bool? isCurrentDirectory = null) :
             this(fsi.FullName, isCurrentDirectory) { }
 
-        string _fullPath;
         public string FullName
         {
-            get { return _fullPath; }
+            get;
+            private set;
         }
 
         bool? _isCurrentDirectory;
@@ -43,9 +43,9 @@ namespace MyCommander.UserControls
                 if (_fsi == null)
                 {
                     if (IsDirectory)
-                        _fsi = new DirectoryInfo(_fullPath);
+                        _fsi = new DirectoryInfo(FullName);
                     else
-                        _fsi = new FileInfo(_fullPath);
+                        _fsi = new FileInfo(FullName);
                 }
                 return _fsi;
             }
@@ -53,7 +53,7 @@ namespace MyCommander.UserControls
 
         public bool IsDirectory
         {
-            get { return File.GetAttributes(_fullPath).HasFlag(FileAttributes.Directory); }
+            get { return File.GetAttributes(FullName).HasFlag(FileAttributes.Directory); }
         }
 
         public string Name
@@ -102,7 +102,7 @@ namespace MyCommander.UserControls
 
         public override int GetHashCode()
         {
-            return _fullPath.GetHashCode();
+            return FullName.GetHashCode();
         }
 
         public bool Equals(FileSystemInfoWrapper other)
@@ -113,12 +113,12 @@ namespace MyCommander.UserControls
             if (ReferenceEquals(this, other))
                 return true;
 
-            return _fullPath.Equals(other._fullPath);
+            return FullName.Equals(other.FullName);
         }
 
         public override string ToString()
         {
-            return _fullPath;
+            return FullName;
         }
     }
 }
