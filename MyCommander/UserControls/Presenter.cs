@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Microsoft.Practices.Prism.Commands;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -12,56 +14,86 @@ using System.Windows.Data;
 
 namespace MyCommander.UserControls
 {
-    class Presenter : INotifyPropertyChanged, IDisposable
+    class TabModelView : Notifier, IDisposable
     {
-        public Presenter(string currentDirectory)
+        public TabModelView(string currentDirectory)
         {
-            CurrentDirectory = currentDirectory;
+            CurrentDirectory = Path.GetFullPath(currentDirectory);
+            CurrentDisk = new DriveInfo(Path.GetPathRoot(CurrentDirectory));
         }
 
-        ObservableCollection<DriveInfo> drives = new ObservableCollection<DriveInfo>(DriveInfo.GetDrives());
-
+        ObservableCollection<DriveInfo> _Drives = new ObservableCollection<DriveInfo>(DriveInfo.GetDrives());
         public ObservableCollection<DriveInfo> Drives
         {
-            get { return drives; }
+            get { return _Drives; }
         }
 
         ObservableDirectory _FDICollection;
         public ObservableDirectory FDICollection
         {
             get { return _FDICollection; }
-            set
-            {
-                if (_FDICollection != value)
-                {
-                    _FDICollection = value;
-                    OnPropertyChanged();
-                }
-            }
+            set { Set(ref _FDICollection, value); }
         }
 
-        string _currentDirectory;
-        public string CurrentDirectory 
+        FileSystemInfoWrapper _SelectedItem;
+        public FileSystemInfoWrapper SelectedItem
         {
-            get { return _currentDirectory; }
+            get { return _SelectedItem; }
+            set { Set(ref _SelectedItem, value); }
+        }
+
+        string _CurrentDirectory;
+        public string CurrentDirectory
+        {
+            get { return _CurrentDirectory; }
             set
             {
-                if (_currentDirectory != value && Directory.Exists(value))
+                if (_CurrentDirectory != value && Directory.Exists(value))
                 {
-                    _currentDirectory = value;
+                    Set(ref _CurrentDirectory, value);
                     if (FDICollection != null)
                         FDICollection.Dispose();
-                    FDICollection = new ObservableDirectory(new DirectoryInfo(_currentDirectory));
-                    OnPropertyChanged();
+                    FDICollection = new ObservableDirectory(new DirectoryInfo(_CurrentDirectory));
                 }
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        void OnPropertyChanged([CallerMemberName]string propName = null)
+        DelegateCommand _DoubleClickCommand;
+        public DelegateCommand DoubleClickCommand
         {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(propName));
+            get
+            {
+                return _DoubleClickCommand ?? (_DoubleClickCommand = new DelegateCommand
+                    (
+                        () =>
+                        {
+                            if (SelectedItem.IsDirectory)
+                                CurrentDirectory = SelectedItem.FullName;
+                            else
+                                Process.Start(SelectedItem.FullName);
+                        }
+                    ));
+            }
+        }
+
+        DriveInfo _CurrentDisk;
+        public DriveInfo CurrentDisk
+        {
+            get { return _CurrentDisk; }
+            set { Set(ref _CurrentDisk, value); }
+        }
+
+        DelegateCommand<DriveInfo> _ChangeDiskCommand;
+        public DelegateCommand<DriveInfo> ChangeDiskCommand
+        {
+            get
+            {
+                return _ChangeDiskCommand ?? (_ChangeDiskCommand = new DelegateCommand<DriveInfo>
+                    (
+                        parameter => CurrentDirectory = parameter.Name,
+                        parameter => parameter.IsReady
+                    ));
+            }
         }
 
         public void Dispose()
