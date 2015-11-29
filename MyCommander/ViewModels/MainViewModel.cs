@@ -24,7 +24,7 @@ namespace MyCommander.ViewModels
 
         public MainViewModel()
         {
-
+            string driveToStartFrom = Drives.First(drive => drive.IsReady).Name;
         }
 
         static async Task CopyFiles(string sourceFileName, string targetFileName, CancellationToken ct, IProgress<double> progress)
