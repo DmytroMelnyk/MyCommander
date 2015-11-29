@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
@@ -20,12 +21,6 @@ namespace MyCommander.UserControls
         {
             CurrentDirectory = Path.GetFullPath(currentDirectory);
             CurrentDisk = new DriveInfo(Path.GetPathRoot(CurrentDirectory));
-        }
-
-        ObservableCollection<DriveInfo> _Drives = new ObservableCollection<DriveInfo>(DriveInfo.GetDrives());
-        public ObservableCollection<DriveInfo> Drives
-        {
-            get { return _Drives; }
         }
 
         ObservableDirectory _FDICollection;
