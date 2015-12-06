@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -21,14 +22,19 @@ namespace MyCommander.UserControls
     /// </summary>
     public partial class CommanderTab : UserControl
     {
+        public bool IsActiveTab
+        {
+            get { return (bool)GetValue(IsActiveTabProperty); }
+            set { SetValue(IsActiveTabProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for IsActiveTab.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty IsActiveTabProperty =
+            DependencyProperty.Register("IsActiveTab", typeof(bool), typeof(CommanderTab), new PropertyMetadata(false));
+
         public CommanderTab()
         {
             InitializeComponent();
-        }
-
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
-        {
-            DataContext = new TabModelView("C:\\");
         }
     }
 }

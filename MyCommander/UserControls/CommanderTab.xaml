@@ -9,11 +9,9 @@
              xmlns:io="clr-namespace:System.IO;assembly=mscorlib"
              xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-             Loaded="UserControl_Loaded"
              mc:Ignorable="d"
              d:DesignHeight="300"
              d:DesignWidth="300">
-
     <UserControl.Resources>
 
         <Style TargetType="{x:Type TextBlock}">
@@ -77,6 +75,7 @@
                     <ItemContainerTemplate>
                         <RadioButton GroupName="{Binding RelativeSource={RelativeSource AncestorType={x:Type UserControl}}, Path=Name}"
                                      Command="{Binding DataContext.ChangeDiskCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                     IsChecked="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=IsSelected}"
                                      CommandParameter="{Binding}">
                             <RadioButton.Style>
                                 <Style TargetType="{x:Type RadioButton}"
@@ -134,6 +133,18 @@
                     <i:InvokeCommandAction Command="{Binding DoubleClickCommand}" />
                 </i:EventTrigger>
             </i:Interaction.Triggers>
+
+            <ListView.ItemContainerStyle>
+                <Style TargetType="{x:Type ListViewItem}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Path=(Selector.IsSelectionActive)}"
+                                     Value="false">
+                            <Setter Property="IsSelected"
+                                    Value="False" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ListView.ItemContainerStyle>
 
             <ListView.View>
                 <GridView>

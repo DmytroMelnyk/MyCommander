@@ -12,19 +12,29 @@ namespace MyCommander.ViewModels
 {
     class MainViewModel : Notifier, IDisposable
     {
-        TabModelView tabModelView1 = new TabModelView("C:\\");
-        TabModelView tabModelView2 = new TabModelView("C:\\");
+        TabModelView tabModelView1 = new TabModelView();
+        TabModelView tabModelView2 = new TabModelView();
 
-        static ObservableCollection<DriveInfo> _Drives = new ObservableCollection<DriveInfo>(DriveInfo.GetDrives());
-        public ObservableCollection<DriveInfo> Drives
+        public TabModelView TabViewModel1
         {
-            get { return _Drives; }
-            set { Set(ref _Drives, value); }
+            get { return tabModelView1; }
+        }
+
+        public TabModelView TabViewModel2
+        {
+            get { return tabModelView2; }
         }
 
         public MainViewModel()
         {
-            string driveToStartFrom = Drives.First(drive => drive.IsReady).Name;
+            ActiveTab = tabModelView1;
+        }
+
+        TabModelView _ActiveTab;
+        public TabModelView ActiveTab
+        {
+            get { return _ActiveTab; }
+            set { Set(ref _ActiveTab, value); }
         }
 
         static async Task CopyFiles(string sourceFileName, string targetFileName, CancellationToken ct, IProgress<double> progress)

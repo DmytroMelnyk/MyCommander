@@ -17,10 +17,18 @@ namespace MyCommander.UserControls
 {
     class TabModelView : Notifier, IDisposable
     {
-        public TabModelView(string currentDirectory)
+        public TabModelView()
         {
+            string currentDirectory = Drives.First(drive => drive.IsReady).Name;
             CurrentDirectory = Path.GetFullPath(currentDirectory);
             CurrentDisk = new DriveInfo(Path.GetPathRoot(CurrentDirectory));
+        }
+
+        static ObservableCollection<DriveInfo> _Drives = new ObservableCollection<DriveInfo>(DriveInfo.GetDrives());
+        public ObservableCollection<DriveInfo> Drives
+        {
+            get { return _Drives; }
+            set { Set(ref _Drives, value); }
         }
 
         ObservableDirectory _FDICollection;

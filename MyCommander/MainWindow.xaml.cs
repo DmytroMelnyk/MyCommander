@@ -21,6 +21,16 @@ namespace MyCommander
     /// </summary>
     public partial class MainWindow : Window
     {
+        public CommanderTab ActiveTab
+        {
+            get { return (CommanderTab)GetValue(ActiveTabProperty); }
+            set { SetValue(ActiveTabProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for ActiveTab.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ActiveTabProperty =
+            DependencyProperty.Register("ActiveTab", typeof(CommanderTab), typeof(MainWindow), new PropertyMetadata(null));
+
         public MainWindow()
         {
             InitializeComponent();
