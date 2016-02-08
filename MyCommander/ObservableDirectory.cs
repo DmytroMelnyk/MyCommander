@@ -21,7 +21,7 @@ namespace MyCommander
         {
             if (di.Parent != null)
                 this.Add(new FileSystemInfoWrapper(di.Parent, true));
-            //BindingOperations.EnableCollectionSynchronization(this, _locker);
+            BindingOperations.EnableCollectionSynchronization(this, _locker);
 
             _di = di;
             _fsw = new FileSystemWatcher(di.FullName)
