@@ -11,6 +11,30 @@
              d:DesignHeight="300"
              d:DesignWidth="300">
 
+    <UserControl.Resources>
+
+        <Style TargetType="ProgressBar">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ProgressBar}">
+                        <Border Name="PART_Track"
+                                Width="{TemplateBinding Width}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Background="{TemplateBinding Background}">
+                            <Rectangle Name="PART_Indicator"
+                                       HorizontalAlignment="Right"
+                                       Fill="{TemplateBinding Foreground}"
+                                       Height="{TemplateBinding Height}" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
+    </UserControl.Resources>
+
     <DockPanel>
         <ToolBarTray DockPanel.Dock="Top">
             <ToolBar ItemsSource="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=DiskCollection}">
@@ -42,20 +66,6 @@
                                                  Background="Green"
                                                  Foreground="White"
                                                  Width="20">
-                                        <ProgressBar.Template>
-                                            <ControlTemplate TargetType="{x:Type ProgressBar}">
-                                                <Border Name="PART_Track"
-                                                        Width="{TemplateBinding Width}"
-                                                        BorderBrush="{TemplateBinding BorderBrush}"
-                                                        BorderThickness="{TemplateBinding BorderThickness}"
-                                                        Background="{TemplateBinding Background}">
-                                                    <Rectangle Name="PART_Indicator"
-                                                               HorizontalAlignment="Right"
-                                                               Fill="{TemplateBinding Foreground}"
-                                                               Height="{TemplateBinding Height}" />
-                                                </Border>
-                                            </ControlTemplate>
-                                        </ProgressBar.Template>
                                     </ProgressBar>
                                 </StackPanel>
                             </RadioButton.Content>

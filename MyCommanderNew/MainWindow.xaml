@@ -11,7 +11,9 @@
         <local:ViewModel />
     </Window.DataContext>
     
-    <Grid>
-        <uctrl:CommanderTab x:Name="Tab1" DiskCollection="{Binding Drives}" ChangeDiskCommand="{Binding ChangeDiskCommand}"/>
-    </Grid>
+    <StackPanel>
+        <!--<uctrl:CommanderTab x:Name="Tab1" DiskCollection="{Binding Drives}" ChangeDiskCommand="{Binding ChangeDiskCommand}"/>-->
+        <uctrl:TotalContainer x:Name="totCom"/>
+        <TextBlock Text="{Binding ElementName=totCom, Path=SelectedTab}"/>
+    </StackPanel>
 </Window>

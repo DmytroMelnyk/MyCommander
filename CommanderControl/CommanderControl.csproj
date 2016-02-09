@@ -52,6 +52,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Themes\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="UserControl1.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -59,6 +63,7 @@
     <Compile Include="CommanderTab.xaml.cs">
       <DependentUpon>CommanderTab.xaml</DependentUpon>
     </Compile>
+    <Compile Include="TotalContainer.cs" />
     <Compile Include="UserControl1.xaml.cs">
       <DependentUpon>UserControl1.xaml</DependentUpon>
       <SubType>Code</SubType>

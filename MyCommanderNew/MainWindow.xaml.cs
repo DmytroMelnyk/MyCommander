@@ -23,6 +23,12 @@ namespace MyCommanderNew
         public MainWindow()
         {
             InitializeComponent();
+            var sp = new StackPanel();
+            sp.Children.Add(new TextBlock { Text = "text1" });
+            sp.Children.Add(new Button { Content = "btn1" });
+            totCom.FirstTab = sp;
+
+            totCom.SecondTab = new Button { Content = "Button2" };
         }
     }
 }
