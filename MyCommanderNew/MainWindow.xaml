@@ -12,8 +12,14 @@
     </Window.DataContext>
     
     <StackPanel>
-        <!--<uctrl:CommanderTab x:Name="Tab1" DiskCollection="{Binding Drives}" ChangeDiskCommand="{Binding ChangeDiskCommand}"/>-->
-        <uctrl:TotalContainer x:Name="totCom"/>
-        <TextBlock Text="{Binding ElementName=totCom, Path=SelectedTab}"/>
+        <uctrl:TotalContainer x:Name="totCom">
+            <uctrl:TotalContainer.FirstTab>
+                <uctrl:CommanderTab x:Name="Tab1" DiskCollection="{Binding Drives}" ChangeDiskCommand="{Binding ChangeDiskCommand}"/>
+            </uctrl:TotalContainer.FirstTab>
+            <uctrl:TotalContainer.SecondTab>
+                <uctrl:CommanderTab x:Name="Tab2" />
+            </uctrl:TotalContainer.SecondTab>
+        </uctrl:TotalContainer>
+        <TextBlock Text="{Binding ElementName=totCom, Path=SelectedTab.Name}"/>
     </StackPanel>
 </Window>

@@ -23,33 +23,6 @@ namespace CommanderControl
             DefaultStyleKeyProperty.OverrideMetadata(typeof(TotalContainer), new FrameworkPropertyMetadata(typeof(TotalContainer)));
         }
 
-        public TotalContainer()
-        {
-        }
-
-        protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
-        {
-            if (e.Property == FirstTabProperty)
-            {
-                ((FrameworkElement)e.NewValue).GotFocus += FirstTabFocus;
-            }
-            else if (e.Property == SecondTabProperty)
-            {
-                ((FrameworkElement)e.NewValue).GotFocus += SecondTabFocus;
-            }
-            base.OnPropertyChanged(e);
-        }
-
-        private void FirstTabFocus(object sender, RoutedEventArgs e)
-        {
-            SelectedTab = FirstTab;
-        }
-
-        private void SecondTabFocus(object sender, RoutedEventArgs e)
-        {
-            SelectedTab = SecondTab;
-        }
-
         public FrameworkElement SelectedTab
         {
             get { return (FrameworkElement)GetValue(SelectedTabProperty); }
@@ -66,7 +39,15 @@ namespace CommanderControl
         }
 
         public static readonly DependencyProperty FirstTabProperty =
-            DependencyProperty.Register("FirstTab", typeof(FrameworkElement), typeof(TotalContainer));
+            DependencyProperty.Register("FirstTab", typeof(FrameworkElement), typeof(TotalContainer), new PropertyMetadata((d, e) =>
+            {
+                TotalContainer @this = (TotalContainer)d;
+                @this.AssignEvents(e.OldValue as FrameworkElement, e.NewValue as FrameworkElement, (s, _) =>
+                {
+                    if (@this.SelectedTab == null || @this.SelectedTab == @this.SecondTab)
+                        @this.SelectedTab = @this.FirstTab;
+                });
+            }));
 
         public FrameworkElement SecondTab
         {
@@ -75,6 +56,23 @@ namespace CommanderControl
         }
 
         public static readonly DependencyProperty SecondTabProperty =
-            DependencyProperty.Register("SecondTab", typeof(FrameworkElement), typeof(TotalContainer));
+            DependencyProperty.Register("SecondTab", typeof(FrameworkElement), typeof(TotalContainer), new PropertyMetadata((d, e) =>
+            {
+                TotalContainer @this = (TotalContainer)d;
+                @this.AssignEvents(e.OldValue as FrameworkElement, e.NewValue as FrameworkElement, (s, _) =>
+                {
+                    if (@this.SelectedTab == null || @this.SelectedTab == @this.FirstTab)
+                        @this.SelectedTab = @this.SecondTab;
+                });
+            }));
+
+        private void AssignEvents(FrameworkElement oldFrameworkElement, FrameworkElement newFrameworkElement, MouseButtonEventHandler previewMouseDown)
+        {
+            if (oldFrameworkElement != null)
+                oldFrameworkElement.PreviewMouseDown -= previewMouseDown;
+
+            if (newFrameworkElement != null)
+                newFrameworkElement.PreviewMouseDown += previewMouseDown;
+        }
     }
 }
