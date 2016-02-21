@@ -1,0 +1,24 @@
+﻿<Window x:Class="CommanderControlTest.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:control="clr-namespace:CommanderControl;assembly=CommanderControl"
+        xmlns:control2="clr-namespace:TotalUserControl;assembly=TotalUserControl"
+        xmlns:local="clr-namespace:CommanderControlTest"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="350" Width="525">
+    
+    <control:TotalContainer>
+        <control:TotalContainer.FirstTabContent>
+            <local:ViewModel />
+        </control:TotalContainer.FirstTabContent>
+
+        <control:TotalContainer.TabTemplate>
+            <DataTemplate>
+                <Button Content="{Binding StringProperty}"/>
+            </DataTemplate>
+        </control:TotalContainer.TabTemplate>
+    </control:TotalContainer>
+
+</Window>

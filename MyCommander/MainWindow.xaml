@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:MyCommander.ViewModels"
         xmlns:uctrl="clr-namespace:CommanderControl;assembly=CommanderControl"
+        xmlns:controls="clr-namespace:MyCommander.UserControls"
         Title="MainWindow"
         Height="350"
         Width="525">
@@ -10,15 +11,21 @@
         <local:MainViewModel />
     </Window.DataContext>
 
-    <uctrl:TotalContainer x:Name="totCom" SelectedTab="{Binding ActiveTab, Mode=OneWayToSource}">
-        <uctrl:TotalContainer.FirstTab>
-            <ContentControl x:Name="tab1"
-                     Content="{Binding TabViewModel1}" />
-        </uctrl:TotalContainer.FirstTab>
-        <uctrl:TotalContainer.SecondTab>
-            <ContentControl x:Name="tab2"
-                     Content="{Binding TabViewModel2}" />
-        </uctrl:TotalContainer.SecondTab>
+    <Window.Resources>
+        <TextBlock x:Key="asda" Text="dsfsd"/>
+    </Window.Resources>
+    
+    <uctrl:TotalContainer x:Name="totCom"
+                          SelectedTabContent="{Binding ActiveTab}"
+                          FirstTabContent="{Binding TabViewModel1}"
+                          SecondTabContent="{Binding TabViewModel2}">
+        <uctrl:TotalContainer.TabTemplate>
+            <DataTemplate DataType="{x:Type controls:TabModelView}">
+                <!--<controls:CommanderTab />-->
+                <!--<Button Content="{StaticResource asda}"/>-->
+                <Button Content="{Binding TabViewModel1.CurrentDirectory}"/>
+            </DataTemplate>
+        </uctrl:TotalContainer.TabTemplate>
     </uctrl:TotalContainer>
 
 </Window>

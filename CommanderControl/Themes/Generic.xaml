@@ -3,6 +3,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:CommanderControl">
 
+    <!--<DataTemplate DataType="{x:Type controls:TabModelView}">
+        <controls:CommanderTab />
+    </DataTemplate>-->
+
     <Style TargetType="{x:Type local:TotalContainer}">
         <Setter Property="Template">
             <Setter.Value>
@@ -17,14 +21,23 @@
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <ContentPresenter x:Name="tab1"
-                                              Grid.Column="0"
-                                              Content="{TemplateBinding FirstTab}" />
+                            <ContentControl Grid.Column="0"
+                                            DataContext="{TemplateBinding FirstTabContent}">
+                                <ContentPresenter x:Name="PART_Tab1"
+                                                  ContentTemplate="{TemplateBinding TabTemplate}" 
+                                                  Content="{Binding RelativeSource={RelativeSource AncestorType=ContentControl}}"/>
+                            </ContentControl>
+
                             <GridSplitter Grid.Column="1"
                                           HorizontalAlignment="Stretch" />
-                            <ContentPresenter x:Name="tab2"
-                                              Grid.Column="2"
-                                              Content="{TemplateBinding SecondTab}" />
+
+                            <ContentControl Grid.Column="2"
+                                            DataContext="{TemplateBinding SecondTabContent}">
+                                <ContentPresenter x:Name="PART_Tab2"
+                                                  ContentTemplate="{TemplateBinding TabTemplate}" 
+                                                  Content="{Binding RelativeSource={RelativeSource AncestorType=ContentControl}}"/>
+                            </ContentControl>
+
                         </Grid>
                     </Border>
                 </ControlTemplate>
