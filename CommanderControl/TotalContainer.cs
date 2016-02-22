@@ -30,14 +30,6 @@ namespace CommanderControl
         public override void OnApplyTemplate()
         {
             _tab1 = GetTemplateChild(PARTID_Tab1) as ContentPresenter;
-            //BindingOperations.SetBinding(_tab1, Control.DataContextProperty, new Binding
-            //{
-            //    Source = this,
-            //    Path = new PropertyPath(nameof(FirstTabContent)),
-            //    Mode = BindingMode.OneWay,
-            //    UpdateSourceTrigger = UpdateSourceTrigger.LostFocus
-            //});
-
             WeakEventManager<ContentPresenter, MouseButtonEventArgs>.AddHandler(_tab1, nameof(_tab1.PreviewMouseDown), (s, e) =>
             {
                 if (SelectedTabContent == null || SelectedTabContent == SecondTabContent)

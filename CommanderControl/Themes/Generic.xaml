@@ -21,11 +21,10 @@
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <ContentControl Grid.Column="0"
-                                            DataContext="{TemplateBinding FirstTabContent}">
+                            <ContentControl Grid.Column="0">
                                 <ContentPresenter x:Name="PART_Tab1"
-                                                  ContentTemplate="{TemplateBinding TabTemplate}" 
-                                                  Content="{Binding RelativeSource={RelativeSource AncestorType=ContentControl}}"/>
+                                                  ContentTemplate="{TemplateBinding TabTemplate}"
+                                                  Content="{TemplateBinding FirstTabContent}" />
                             </ContentControl>
 
                             <GridSplitter Grid.Column="1"
@@ -34,8 +33,8 @@
                             <ContentControl Grid.Column="2"
                                             DataContext="{TemplateBinding SecondTabContent}">
                                 <ContentPresenter x:Name="PART_Tab2"
-                                                  ContentTemplate="{TemplateBinding TabTemplate}" 
-                                                  Content="{Binding RelativeSource={RelativeSource AncestorType=ContentControl}}"/>
+                                                  ContentTemplate="{TemplateBinding TabTemplate}"
+                                                  Content="{TemplateBinding SecondTabContent}" />
                             </ContentControl>
 
                         </Grid>
