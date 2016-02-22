@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
+             xmlns:uctrl="clr-namespace:CommanderControl;assembly=CommanderControl"
              xmlns:local="clr-namespace:MyCommander"
              xmlns:util="clr-namespace:Wpf.Util"
              xmlns:io="clr-namespace:System.IO;assembly=mscorlib"
@@ -73,21 +74,13 @@
             <ToolBar ItemsSource="{Binding Drives}">
                 <ToolBar.ItemTemplate>
                     <ItemContainerTemplate>
-                        <RadioButton GroupName="{Binding RelativeSource={RelativeSource AncestorType={x:Type UserControl}}, Path=Name}"
+                        <RadioButton GroupName="{Binding Name, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                      Command="{Binding DataContext.ChangeDiskCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                     IsChecked="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=IsSelected}"
+                                     IsChecked="{Binding IsCurrentDrive}"
                                      CommandParameter="{Binding}">
                             <RadioButton.Style>
                                 <Style TargetType="{x:Type RadioButton}"
-                                       BasedOn="{StaticResource {x:Type ToggleButton}}">
-                                    <Style.Triggers>
-                                        <DataTrigger x:Name="trigger"
-                                                     Binding="{Binding DataContext.CurrentDisk, RelativeSource={RelativeSource AncestorType=UserControl}}">
-                                            <Setter Property="IsChecked"
-                                                    Value="True" />
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
+                                       BasedOn="{StaticResource {x:Type ToggleButton}}" />
                             </RadioButton.Style>
 
                             <RadioButton.Content>

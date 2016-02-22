@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace MyCommander
 {
     [Serializable]
-    public abstract class Notifier : INotifyPropertyChanged
+    public abstract class ViewModelBase : INotifyPropertyChanged
     {
         [field: NonSerialized]
         public event PropertyChangedEventHandler PropertyChanged;

@@ -10,7 +10,7 @@ using System.Windows.Data;
 
 namespace MyCommander
 {
-    class ObservableDirectory : ObservableCollection<FileSystemInfoWrapper>, IDisposable
+    class ObservableDirectory : ObservableCollection<FileSystemViewModel>, IDisposable
     {
         DirectoryInfo _di;
         FileSystemWatcher _fsw;
@@ -20,7 +20,7 @@ namespace MyCommander
             base(GetDirectoryItems(di))
         {
             if (di.Parent != null)
-                this.Add(new FileSystemInfoWrapper(di.Parent, true));
+                Add(new FileSystemViewModel(di.Parent, true));
             BindingOperations.EnableCollectionSynchronization(this, _locker);
 
             _di = di;
@@ -32,27 +32,27 @@ namespace MyCommander
 
             _fsw.Changed += (_, e) =>
             {
-                Remove(new FileSystemInfoWrapper(e.FullPath));
-                Add(new FileSystemInfoWrapper(e.FullPath));
+                Remove(new FileSystemViewModel(e.FullPath));
+                Add(new FileSystemViewModel(e.FullPath));
             };
             _fsw.Renamed += (_, e) =>
             {
-                Remove(new FileSystemInfoWrapper(e.OldFullPath));
-                Add(new FileSystemInfoWrapper(e.FullPath));
+                Remove(new FileSystemViewModel(e.OldFullPath));
+                Add(new FileSystemViewModel(e.FullPath));
             };
             _fsw.Created += (_, e) =>
             {
                 if (!this.Any(item => item.FullName == e.FullPath))
-                    Add(new FileSystemInfoWrapper(e.FullPath));
+                    Add(new FileSystemViewModel(e.FullPath));
             };
-            _fsw.Deleted += (_, e) => Remove(new FileSystemInfoWrapper(e.FullPath));
+            _fsw.Deleted += (_, e) => Remove(new FileSystemViewModel(e.FullPath));
         }
 
-        static IEnumerable<FileSystemInfoWrapper> GetDirectoryItems(DirectoryInfo di)
+        static IEnumerable<FileSystemViewModel> GetDirectoryItems(DirectoryInfo di)
         {
             return di.EnumerateFileSystemInfos().
                 Where(item => !item.Attributes.HasFlag(FileAttributes.ReparsePoint)).
-                Select(item => new FileSystemInfoWrapper(item));
+                Select(item => new FileSystemViewModel(item));
         }
 
         public void Dispose()

@@ -16,7 +16,7 @@
     </Window.Resources>
     
     <uctrl:TotalContainer x:Name="totCom"
-                          SelectedTabContent="{Binding ActiveTab}"
+                          SelectedTabContent="{Binding ActiveTab, Mode=TwoWay}"
                           FirstTabContent="{Binding TabViewModel1}"
                           SecondTabContent="{Binding TabViewModel2}">
         <uctrl:TotalContainer.TabTemplate>

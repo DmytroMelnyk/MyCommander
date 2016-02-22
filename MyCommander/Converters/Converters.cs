@@ -13,10 +13,10 @@ namespace MyCommander
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            if (value is DriveInfo)
+            if (value is DriveViewModel)
                 return FolderManager.GetImageSource(value.ToString(), ItemState.Undefined);
 
-            FileSystemInfoWrapper fsi = (FileSystemInfoWrapper)value;
+            FileSystemViewModel fsi = (FileSystemViewModel)value;
             return fsi.IsDirectory ? FolderManager.GetImageSource(fsi.FullName, ItemState.Undefined) :
                 FileManager.GetImageSource(fsi.FullName);
         }

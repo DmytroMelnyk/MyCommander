@@ -10,17 +10,17 @@ using System.Threading.Tasks;
 
 namespace MyCommander.ViewModels
 {
-    class MainViewModel : Notifier, IDisposable
+    class MainViewModel : ViewModelBase, IDisposable
     {
-        TabModelView tabModelView1 = new TabModelView();
-        TabModelView tabModelView2 = new TabModelView();
+        TabViewModel tabModelView1 = new TabViewModel();
+        TabViewModel tabModelView2 = new TabViewModel();
 
-        public TabModelView TabViewModel1
+        public TabViewModel TabViewModel1
         {
             get { return tabModelView1; }
         }
 
-        public TabModelView TabViewModel2
+        public TabViewModel TabViewModel2
         {
             get { return tabModelView2; }
         }
@@ -30,8 +30,8 @@ namespace MyCommander.ViewModels
             ActiveTab = tabModelView1;
         }
 
-        TabModelView _ActiveTab;
-        public TabModelView ActiveTab
+        TabViewModel _ActiveTab;
+        public TabViewModel ActiveTab
         {
             get { return _ActiveTab; }
             set { Set(ref _ActiveTab, value); }

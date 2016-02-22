@@ -8,7 +8,7 @@
         <local:AttributeConverter x:Key="attrConverter"/>
         <local:FileSystemInfoWrapperToImage x:Key="fSIWToImageConverter"/>
 
-        <DataTemplate DataType="{x:Type controls:TabModelView}">
+        <DataTemplate DataType="{x:Type controls:TabViewModel}">
             <controls:CommanderTab />
         </DataTemplate>
         

@@ -15,17 +15,22 @@ using System.Windows.Data;
 
 namespace MyCommander.UserControls
 {
-    class TabModelView : Notifier, IDisposable
+    class TabViewModel : ViewModelBase, IDisposable
     {
-        public TabModelView()
+        public TabViewModel()
         {
             string currentDirectory = Drives.First(drive => drive.IsReady).Name;
             CurrentDirectory = Path.GetFullPath(currentDirectory);
-            CurrentDisk = new DriveInfo(Path.GetPathRoot(CurrentDirectory));
+
+            foreach (var drive in Drives)
+                drive.IsCurrentDrive = false;
+
+            CurrentDisk = Drives.Single(item => item.Name == Path.GetPathRoot(CurrentDirectory));
+            CurrentDisk.IsCurrentDrive = true;
         }
 
-        static ObservableCollection<DriveInfo> _Drives = new ObservableCollection<DriveInfo>(DriveInfo.GetDrives());
-        public ObservableCollection<DriveInfo> Drives
+        static ObservableCollection<DriveViewModel> _Drives = new ObservableCollection<DriveViewModel>(DriveViewModel.GetDrives());
+        public ObservableCollection<DriveViewModel> Drives
         {
             get { return _Drives; }
             set { Set(ref _Drives, value); }
@@ -38,8 +43,8 @@ namespace MyCommander.UserControls
             set { Set(ref _FDICollection, value); }
         }
 
-        FileSystemInfoWrapper _SelectedItem;
-        public FileSystemInfoWrapper SelectedItem
+        FileSystemViewModel _SelectedItem;
+        public FileSystemViewModel SelectedItem
         {
             get { return _SelectedItem; }
             set { Set(ref _SelectedItem, value); }
@@ -79,19 +84,19 @@ namespace MyCommander.UserControls
             }
         }
 
-        DriveInfo _CurrentDisk;
-        public DriveInfo CurrentDisk
+        DriveViewModel _CurrentDisk;
+        public DriveViewModel CurrentDisk
         {
             get { return _CurrentDisk; }
             set { Set(ref _CurrentDisk, value); }
         }
 
-        DelegateCommand<DriveInfo> _ChangeDiskCommand;
-        public DelegateCommand<DriveInfo> ChangeDiskCommand
+        DelegateCommand<DriveViewModel> _ChangeDiskCommand;
+        public DelegateCommand<DriveViewModel> ChangeDiskCommand
         {
             get
             {
-                return _ChangeDiskCommand ?? (_ChangeDiskCommand = new DelegateCommand<DriveInfo>
+                return _ChangeDiskCommand ?? (_ChangeDiskCommand = new DelegateCommand<DriveViewModel>
                     (
                         parameter => CurrentDirectory = parameter.Name,
                         parameter => parameter.IsReady

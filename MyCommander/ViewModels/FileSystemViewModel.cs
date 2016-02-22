@@ -7,15 +7,15 @@ using System.Threading.Tasks;
 
 namespace MyCommander.UserControls
 {
-    class FileSystemInfoWrapper : IEquatable<FileSystemInfoWrapper>
+    class FileSystemViewModel : IEquatable<FileSystemViewModel>
     {
-        public FileSystemInfoWrapper(string path, bool? isCurrentDirectory = null)
+        public FileSystemViewModel(string path, bool? isCurrentDirectory = null)
         {
             FullName = Path.GetFullPath(path);
             _isCurrentDirectory = isCurrentDirectory;
         }
 
-        public FileSystemInfoWrapper(FileSystemInfo fsi, bool? isCurrentDirectory = null) :
+        public FileSystemViewModel(FileSystemInfo fsi, bool? isCurrentDirectory = null) :
             this(fsi.FullName, isCurrentDirectory) { }
 
         public string FullName
@@ -97,7 +97,7 @@ namespace MyCommander.UserControls
             if (this.GetType() != obj.GetType())
                 return false;
 
-            return Equals((FileSystemInfoWrapper)obj);
+            return Equals((FileSystemViewModel)obj);
         }
 
         public override int GetHashCode()
@@ -105,7 +105,7 @@ namespace MyCommander.UserControls
             return FullName.GetHashCode();
         }
 
-        public bool Equals(FileSystemInfoWrapper other)
+        public bool Equals(FileSystemViewModel other)
         {
             if (ReferenceEquals(other, null))
                 return false;

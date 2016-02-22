@@ -66,16 +66,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Converters.cs" />
-    <Compile Include="GridViewSort.cs" />
-    <Compile Include="Managers.cs" />
-    <Compile Include="Notifier.cs" />
-    <Compile Include="ObservableDirectory.cs" />
+    <Compile Include="Converters\Converters.cs" />
+    <Compile Include="Helpers\GridViewSort.cs" />
+    <Compile Include="Helpers\Managers.cs" />
+    <Compile Include="ViewModels\ViewModelBase.cs" />
+    <Compile Include="Helpers\ObservableDirectory.cs" />
     <Compile Include="UserControls\CommanderTab.xaml.cs">
       <DependentUpon>CommanderTab.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\FDWrapper.cs" />
-    <Compile Include="UserControls\Presenter.cs" />
+    <Compile Include="ViewModels\DriveViewModel.cs" />
+    <Compile Include="ViewModels\FileSystemViewModel.cs" />
+    <Compile Include="ViewModels\TabViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

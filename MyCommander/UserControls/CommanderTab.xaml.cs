@@ -28,7 +28,6 @@ namespace MyCommander.UserControls
             set { SetValue(IsActiveTabProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for IsActiveTab.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty IsActiveTabProperty =
             DependencyProperty.Register("IsActiveTab", typeof(bool), typeof(CommanderTab), new PropertyMetadata(false));
 
