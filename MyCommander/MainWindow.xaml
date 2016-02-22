@@ -20,10 +20,8 @@
                           FirstTabContent="{Binding TabViewModel1}"
                           SecondTabContent="{Binding TabViewModel2}">
         <uctrl:TotalContainer.TabTemplate>
-            <DataTemplate DataType="{x:Type controls:TabModelView}">
-                <!--<controls:CommanderTab />-->
-                <!--<Button Content="{StaticResource asda}"/>-->
-                <Button Content="{Binding TabViewModel1.CurrentDirectory}"/>
+            <DataTemplate>
+                <controls:CommanderTab />
             </DataTemplate>
         </uctrl:TotalContainer.TabTemplate>
     </uctrl:TotalContainer>

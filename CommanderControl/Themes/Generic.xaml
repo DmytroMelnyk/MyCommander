@@ -30,8 +30,7 @@
                             <GridSplitter Grid.Column="1"
                                           HorizontalAlignment="Stretch" />
 
-                            <ContentControl Grid.Column="2"
-                                            DataContext="{TemplateBinding SecondTabContent}">
+                            <ContentControl Grid.Column="2">
                                 <ContentPresenter x:Name="PART_Tab2"
                                                   ContentTemplate="{TemplateBinding TabTemplate}"
                                                   Content="{TemplateBinding SecondTabContent}" />
