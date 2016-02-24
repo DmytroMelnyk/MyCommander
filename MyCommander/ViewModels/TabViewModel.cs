@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using MyCommander.Validators;
+using MyCommander.Helpers;
 
 namespace MyCommander.UserControls
 {
@@ -19,8 +20,8 @@ namespace MyCommander.UserControls
             CurrentDisk.IsCurrentDrive = true;
         }
 
-        static ObservableCollection<DriveViewModel> _Drives = new ObservableCollection<DriveViewModel>(DriveViewModel.GetDrives());
-        public ObservableCollection<DriveViewModel> Drives
+        static ObservableDriveCollection _Drives = new ObservableDriveCollection();
+        public ObservableDriveCollection Drives
         {
             get { return _Drives; }
             set { Set(ref _Drives, value); }
@@ -48,9 +49,12 @@ namespace MyCommander.UserControls
             get { return _CurrentDirectory; }
             set
             {
-                Set(ref _CurrentDirectory, value);
-                FDICollection?.Dispose();
-                FDICollection = new ObservableDirectory(new DirectoryInfo(_CurrentDirectory));
+                if (ValidateProperty(value, false))
+                {
+                    Set(ref _CurrentDirectory, value, false);
+                    FDICollection?.Dispose();
+                    FDICollection = new ObservableDirectory(new DirectoryInfo(CurrentDirectory));
+                }
             }
         }
 

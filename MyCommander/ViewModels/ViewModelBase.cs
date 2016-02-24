@@ -64,28 +64,33 @@ namespace MyCommander
             return results.Select(item => item.ErrorMessage);
         }
 
-        void ValidateProperty<T>(string propertyName, T propertyValue)
+        protected bool ValidateProperty<T>(T propertyValue, bool notifyErrorChanged = true, [CallerMemberName]string propertyName = null)
         {
             var messages = GetErrorMessages(propertyName, propertyValue);
             if (messages == null)
-                return;
+                return true;
 
-            foreach (var error in Errors.Where(e => e.PropertyName == propertyName).ToArray())
-                Errors.Remove(error);
+            if (notifyErrorChanged)
+            {
+                foreach (var error in Errors.Where(e => e.PropertyName == propertyName).ToArray())
+                    Errors.Remove(error);
 
-            foreach (string message in messages)
-                Errors.AddFirst(new ValidationError(propertyName, message));
+                foreach (string message in messages)
+                    Errors.AddFirst(new ValidationError(propertyName, message));
 
-            ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
+                ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
+            }
+            return !messages.Any();
         }
 
-        protected void Set<T>(ref T field, T propertyValue, [CallerMemberName] string propertyName = null)
+        protected void Set<T>(ref T field, T propertyValue, bool validateProperty = true, [CallerMemberName] string propertyName = null)
         {
             if (!EqualityComparer<T>.Default.Equals(field, propertyValue))
             {
                 field = propertyValue;
-                ValidateProperty(propertyName, propertyValue);
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+                if (validateProperty)
+                    ValidateProperty(propertyValue, true, propertyName);
             }
         }
     }

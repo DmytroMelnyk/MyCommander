@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MyCommander.UserControls
 {
-    public class DriveViewModel : ViewModelBase
+    public class DriveViewModel : ViewModelBase, IEquatable<DriveViewModel>, IComparable<DriveViewModel>, IComparable
     {
         public DriveViewModel(string driveName, bool isCurrentDrive = false)
         {
@@ -59,9 +59,64 @@ namespace MyCommander.UserControls
             }
         }
 
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(obj, null))
+                return false;
+
+            if (ReferenceEquals(this, obj))
+                return true;
+
+            if (this.GetType() != obj.GetType())
+                return false;
+
+            return Equals((DriveViewModel)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return Name.GetHashCode();
+        }
+
         public override string ToString()
         {
-            return DriveInfo.ToString();
+            return Name;
+        }
+
+        public bool Equals(DriveViewModel other)
+        {
+            if (ReferenceEquals(other, null))
+                return false;
+
+            if (ReferenceEquals(this, other))
+                return true;
+
+            return Name.Equals(other.Name);
+        }
+
+        public int CompareTo(object obj)
+        {
+            if (ReferenceEquals(obj, null))
+                return 1;
+
+            if (ReferenceEquals(this, obj))
+                return 0;
+
+            if (this.GetType() != obj.GetType())
+                throw new ArgumentException("Object is not a " + nameof(DriveViewModel));
+
+            return CompareTo((DriveViewModel)obj);
+        }
+
+        public int CompareTo(DriveViewModel other)
+        {
+            if (ReferenceEquals(other, null))
+                return 1;
+
+            if (ReferenceEquals(this, other))
+                return 0;
+
+            return Name.CompareTo(other.Name);
         }
     }
 }
