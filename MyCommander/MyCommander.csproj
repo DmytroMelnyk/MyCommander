@@ -46,6 +46,7 @@
       <HintPath>..\packages\Prism.Mvvm.1.1.1\lib\net45\Microsoft.Practices.Prism.SharedInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
@@ -69,6 +70,9 @@
     <Compile Include="Converters\Converters.cs" />
     <Compile Include="Helpers\GridViewSort.cs" />
     <Compile Include="Helpers\Managers.cs" />
+    <Compile Include="Helpers\ObservableDiskCollection.cs" />
+    <Compile Include="Validators\DirectoryExistAttribute.cs" />
+    <Compile Include="ViewModels\ValidationError.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="Helpers\ObservableDirectory.cs" />
     <Compile Include="UserControls\CommanderTab.xaml.cs">

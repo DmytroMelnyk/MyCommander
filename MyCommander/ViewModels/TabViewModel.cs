@@ -1,17 +1,10 @@
 ﻿using Microsoft.Practices.Prism.Commands;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Data;
+using MyCommander.Validators;
 
 namespace MyCommander.UserControls
 {
@@ -21,9 +14,6 @@ namespace MyCommander.UserControls
         {
             string currentDirectory = Drives.First(drive => drive.IsReady).Name;
             CurrentDirectory = Path.GetFullPath(currentDirectory);
-
-            foreach (var drive in Drives)
-                drive.IsCurrentDrive = false;
 
             CurrentDisk = Drives.Single(item => item.Name == Path.GetPathRoot(CurrentDirectory));
             CurrentDisk.IsCurrentDrive = true;
@@ -51,18 +41,16 @@ namespace MyCommander.UserControls
         }
 
         string _CurrentDirectory;
+
+        [DirectoryExist]
         public string CurrentDirectory
         {
             get { return _CurrentDirectory; }
             set
             {
-                if (_CurrentDirectory != value && Directory.Exists(value))
-                {
-                    Set(ref _CurrentDirectory, value);
-                    if (FDICollection != null)
-                        FDICollection.Dispose();
-                    FDICollection = new ObservableDirectory(new DirectoryInfo(_CurrentDirectory));
-                }
+                Set(ref _CurrentDirectory, value);
+                FDICollection?.Dispose();
+                FDICollection = new ObservableDirectory(new DirectoryInfo(_CurrentDirectory));
             }
         }
 
@@ -106,8 +94,7 @@ namespace MyCommander.UserControls
 
         public void Dispose()
         {
-            if (_FDICollection != null)
-                _FDICollection.Dispose();
+            _FDICollection?.Dispose();
         }
     }
 }
