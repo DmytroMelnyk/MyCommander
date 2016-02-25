@@ -1,19 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 
 namespace MyCommander.UserControls
 {
@@ -24,8 +10,8 @@ namespace MyCommander.UserControls
     {
         public bool IsActiveTab
         {
-            get { return (bool)GetValue(IsActiveTabProperty); }
-            set { SetValue(IsActiveTabProperty, value); }
+            get { return (bool)this.GetValue(IsActiveTabProperty); }
+            set { this.SetValue(IsActiveTabProperty, value); }
         }
 
         public static readonly DependencyProperty IsActiveTabProperty =
@@ -33,7 +19,7 @@ namespace MyCommander.UserControls
 
         public CommanderTab()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
     }
 }

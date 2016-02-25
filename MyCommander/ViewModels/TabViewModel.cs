@@ -1,6 +1,5 @@
 ﻿using Microsoft.Practices.Prism.Commands;
 using System;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -9,100 +8,106 @@ using MyCommander.Helpers;
 
 namespace MyCommander.UserControls
 {
-    class TabViewModel : ViewModelBase, IDisposable
+    internal class TabViewModel : ViewModelBase, IDisposable
     {
+        private ObservableDriveCollection drives = new ObservableDriveCollection();
+        private ObservableDirectory fDICollection;
+        private FileSystemViewModel selectedItem;
+        private string currentDirectory;
+        private DelegateCommand doubleClickCommand;
+        private DriveViewModel currentDisk;
+        private DelegateCommand<DriveViewModel> changeDiskCommand;
+
         public TabViewModel()
         {
-            CurrentDirectory = Drives.First(drive => drive.IsReady).Name;
+            this.CurrentDirectory = this.Drives.First(drive => drive.IsReady).Name;
         }
 
-        ObservableDriveCollection _Drives = new ObservableDriveCollection();
         public ObservableDriveCollection Drives
         {
-            get { return _Drives; }
+            get { return this.drives; }
         }
 
-        ObservableDirectory _FDICollection;
         public ObservableDirectory FDICollection
         {
-            get { return _FDICollection; }
-            set { Set(ref _FDICollection, value); }
+            get { return this.fDICollection; }
+            set { this.Set(ref this.fDICollection, value); }
         }
 
-        FileSystemViewModel _SelectedItem;
         public FileSystemViewModel SelectedItem
         {
-            get { return _SelectedItem; }
-            set { Set(ref _SelectedItem, value); }
+            get { return this.selectedItem; }
+            set { this.Set(ref this.selectedItem, value); }
         }
-
-        string _CurrentDirectory;
 
         [DirectoryExist]
         public string CurrentDirectory
         {
-            get { return _CurrentDirectory; }
+            get
+            {
+                return this.currentDirectory;
+            }
+
             set
             {
-                if (ValidateProperty(value, notifyErrorChanged: false))
+                if (this.ValidateProperty(value, notifyErrorChanged: false))
                 {
-                    Set(ref _CurrentDirectory, value, validateProperty: false);
-                    if (CurrentDisk != null)
+                    this.Set(ref this.currentDirectory, value, validateProperty: false);
+                    if (this.CurrentDisk != null)
                     {
-                        CurrentDisk.IsCurrentDrive = false;
+                        this.CurrentDisk.IsCurrentDrive = false;
                     }
-                    int idx = Drives.BinarySearch(new DriveViewModel(CurrentDirectory));
-                    var curDrive = Drives[idx];
+
+                    int idx = this.Drives.BinarySearch(new DriveViewModel(this.CurrentDirectory));
+                    var curDrive = this.Drives[idx];
                     curDrive.IsCurrentDrive = true;
-                    CurrentDisk = curDrive;
-                    FDICollection?.Dispose();
-                    FDICollection = new ObservableDirectory(new DirectoryInfo(CurrentDirectory));
+                    this.CurrentDisk = curDrive;
+                    this.FDICollection?.Dispose();
+                    this.FDICollection = new ObservableDirectory(new DirectoryInfo(this.CurrentDirectory));
                 }
             }
         }
 
-        DelegateCommand _DoubleClickCommand;
         public DelegateCommand DoubleClickCommand
         {
             get
             {
-                return _DoubleClickCommand ?? (_DoubleClickCommand = new DelegateCommand
-                    (
+                return this.doubleClickCommand ?? (this.doubleClickCommand = new DelegateCommand(
                         () =>
                         {
-                            if (SelectedItem.IsDirectory)
-                                CurrentDirectory = SelectedItem.FullName;
+                            if (this.SelectedItem.IsDirectory)
+                            {
+                                this.CurrentDirectory = this.SelectedItem.FullName;
+                            }
                             else
-                                Process.Start(SelectedItem.FullName);
-                        }
-                    ));
+                            {
+                                Process.Start(this.SelectedItem.FullName);
+                            }
+                        }));
             }
         }
 
-        DriveViewModel _CurrentDisk;
         public DriveViewModel CurrentDisk
         {
-            get { return _CurrentDisk; }
-            set { Set(ref _CurrentDisk, value); }
+            get { return this.currentDisk; }
+            set { this.Set(ref this.currentDisk, value); }
         }
 
-        DelegateCommand<DriveViewModel> _ChangeDiskCommand;
         public DelegateCommand<DriveViewModel> ChangeDiskCommand
         {
             get
             {
-                return _ChangeDiskCommand ?? (_ChangeDiskCommand = new DelegateCommand<DriveViewModel>
-                    (
-                        parameter => CurrentDirectory = parameter.Name,
-                        parameter => parameter.IsReady
-                    ));
+                return this.changeDiskCommand ?? (this.changeDiskCommand =
+                    new DelegateCommand<DriveViewModel>(
+                        parameter => this.CurrentDirectory = parameter.Name,
+                        parameter => parameter.IsReady));
             }
         }
 
         public void Dispose()
         {
-            Drives.Dispose();
-            _FDICollection?.Dispose();
+            this.Drives.Dispose();
+            this.fDICollection?.Dispose();
         }
     }
 }

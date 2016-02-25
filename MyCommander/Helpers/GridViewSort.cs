@@ -12,63 +12,11 @@ namespace Wpf.Util
 {
     public class GridViewSort
     {
-        #region Attached properties
+        public static readonly DependencyProperty PropertyNameProperty =
+            DependencyProperty.RegisterAttached("PropertyName", typeof(string), typeof(GridViewSort));
 
-        public static ICommand GetCommand(DependencyObject obj)
-        {
-            return (ICommand)obj.GetValue(CommandProperty);
-        }
-
-        public static void SetCommand(DependencyObject obj, ICommand value)
-        {
-            obj.SetValue(CommandProperty, value);
-        }
-
-        // Using a DependencyProperty as the backing store for Command.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty CommandProperty =
-            DependencyProperty.RegisterAttached(
-                "Command",
-                typeof(ICommand),
-                typeof(GridViewSort),
-                new UIPropertyMetadata(
-                    null,
-                    (o, e) =>
-                    {
-                        ItemsControl listView = o as ItemsControl;
-                        if (listView != null && !GetAutoSort(listView))
-                        { // Don't change click handler if AutoSort enabled
-                            if (e.OldValue != null && e.NewValue == null)
-                            {
-                                listView.RemoveHandler(GridViewColumnHeader.ClickEvent, new RoutedEventHandler(ColumnHeader_Click));
-                            }
-                            if (e.OldValue == null && e.NewValue != null)
-                            {
-                                listView.AddHandler(GridViewColumnHeader.ClickEvent, new RoutedEventHandler(ColumnHeader_Click));
-                            }
-                        }
-                    }
-                )
-            );
-
-        public static bool GetAutoSort(DependencyObject obj)
-        {
-            return (bool)obj.GetValue(AutoSortProperty);
-        }
-
-        public static void SetAutoSort(DependencyObject obj, bool value)
-        {
-            obj.SetValue(AutoSortProperty, value);
-        }
-
-        // Using a DependencyProperty as the backing store for AutoSort.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty AutoSortProperty =
-            DependencyProperty.RegisterAttached(
-                "AutoSort",
-                typeof(bool),
-                typeof(GridViewSort),
-                new UIPropertyMetadata(
-                    false,
-                    (o, e) =>
+            DependencyProperty.RegisterAttached("AutoSort", typeof(bool), typeof(GridViewSort), new PropertyMetadata((o, e) =>
                     {
                         ListView listView = o as ListView;
                         if (listView != null && GetCommand(listView) == null)
@@ -84,9 +32,44 @@ namespace Wpf.Util
                                 listView.AddHandler(GridViewColumnHeader.ClickEvent, new RoutedEventHandler(ColumnHeader_Click));
                             }
                         }
-                    }
-                )
-            );
+                    }));
+
+        public static readonly DependencyProperty CommandProperty =
+            DependencyProperty.RegisterAttached("Command", typeof(ICommand), typeof(GridViewSort), new PropertyMetadata((o, e) =>
+                    {
+                        ItemsControl listView = o as ItemsControl;
+                        if (listView != null && !GetAutoSort(listView))
+                        { // Don't change click handler if AutoSort enabled
+                            if (e.OldValue != null && e.NewValue == null)
+                            {
+                                listView.RemoveHandler(GridViewColumnHeader.ClickEvent, new RoutedEventHandler(ColumnHeader_Click));
+                            }
+                            if (e.OldValue == null && e.NewValue != null)
+                            {
+                                listView.AddHandler(GridViewColumnHeader.ClickEvent, new RoutedEventHandler(ColumnHeader_Click));
+                            }
+                        }
+                    }));
+
+        public static ICommand GetCommand(DependencyObject obj)
+        {
+            return (ICommand)obj.GetValue(CommandProperty);
+        }
+
+        public static void SetCommand(DependencyObject obj, ICommand value)
+        {
+            obj.SetValue(CommandProperty, value);
+        }
+
+        public static bool GetAutoSort(DependencyObject obj)
+        {
+            return (bool)obj.GetValue(AutoSortProperty);
+        }
+
+        public static void SetAutoSort(DependencyObject obj, bool value)
+        {
+            obj.SetValue(AutoSortProperty, value);
+        }
 
         public static string GetPropertyName(DependencyObject obj)
         {
@@ -98,18 +81,90 @@ namespace Wpf.Util
             obj.SetValue(PropertyNameProperty, value);
         }
 
-        // Using a DependencyProperty as the backing store for PropertyName.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty PropertyNameProperty =
-            DependencyProperty.RegisterAttached(
-                "PropertyName",
-                typeof(string),
-                typeof(GridViewSort),
-                new UIPropertyMetadata(null)
-            );
+        public static void CurrentSortColumnSetGlyph(GridViewColumn gvc, ListView lv)
+        {
+            ListSortDirection lsd;
+            Brush brush;
+            if (lv == null)
+            {
+                lsd = ListSortDirection.Ascending;
+                brush = Brushes.Transparent;
+            }
+            else
+            {
+                SortDescriptionCollection sdc = lv.Items.SortDescriptions;
+                if (sdc == null || sdc.Count < 1)
+                {
+                    return;
+                }
 
-        #endregion
+                lsd = sdc[0].Direction;
+                brush = Brushes.Gray;
+            }
 
-        #region Column header click event handler
+            FrameworkElementFactory fefGlyph = new FrameworkElementFactory(typeof(Path));
+            fefGlyph.Name = "arrow";
+            fefGlyph.SetValue(Path.StrokeThicknessProperty, 1.0);
+            fefGlyph.SetValue(Path.FillProperty, brush);
+            fefGlyph.SetValue(StackPanel.HorizontalAlignmentProperty, HorizontalAlignment.Center);
+
+            int s = 4;
+            if (lsd == ListSortDirection.Ascending)
+            {
+                PathFigure pf = new PathFigure();
+                pf.IsClosed = true;
+                pf.StartPoint = new Point(0, s);
+                pf.Segments.Add(new LineSegment(new Point(s * 2, s), false));
+                pf.Segments.Add(new LineSegment(new Point(s, 0), false));
+
+                PathGeometry pg = new PathGeometry();
+                pg.Figures.Add(pf);
+
+                fefGlyph.SetValue(Path.DataProperty, pg);
+            }
+            else
+            {
+                PathFigure pf = new PathFigure();
+                pf.IsClosed = true;
+                pf.StartPoint = new Point(0, 0);
+                pf.Segments.Add(new LineSegment(new Point(s, s), false));
+                pf.Segments.Add(new LineSegment(new Point(s * 2, 0), false));
+
+                PathGeometry pg = new PathGeometry();
+                pg.Figures.Add(pf);
+
+                fefGlyph.SetValue(Path.DataProperty, pg);
+            }
+
+            FrameworkElementFactory fefTextBlock = new FrameworkElementFactory(typeof(TextBlock));
+            fefTextBlock.SetValue(TextBlock.HorizontalAlignmentProperty, HorizontalAlignment.Center);
+            fefTextBlock.SetValue(TextBlock.TextProperty, new Binding());
+
+            FrameworkElementFactory fefDockPanel = new FrameworkElementFactory(typeof(StackPanel));
+            fefDockPanel.SetValue(StackPanel.OrientationProperty, Orientation.Horizontal);
+            fefDockPanel.AppendChild(fefTextBlock);
+            fefDockPanel.AppendChild(fefGlyph);
+
+            DataTemplate dt = new DataTemplate(typeof(GridViewColumn));
+            dt.VisualTree = fefDockPanel;
+
+            gvc.HeaderTemplate = dt;
+        }
+
+        public static T GetAncestor<T>(DependencyObject reference)
+            where T : DependencyObject
+        {
+            T targetParent = null;
+            do
+            {
+                reference = (reference is Visual || reference is Visual3D) ?
+                    VisualTreeHelper.GetParent(reference) :
+                    LogicalTreeHelper.GetParent(reference);
+                targetParent = reference as T;
+            }
+            while (targetParent == null);
+            return targetParent;
+        }
 
         private static void ColumnHeader_Click(object sender, RoutedEventArgs e)
         {
@@ -143,105 +198,15 @@ namespace Wpf.Util
                                 direction = (currentSort.Direction == ListSortDirection.Ascending) ?
                                     ListSortDirection.Descending : ListSortDirection.Ascending;
                             }
+
                             listView.Items.SortDescriptions.Remove(currentSort);
                             listView.Items.SortDescriptions.Add(new SortDescription(propertyName, direction));
                         }
                     }
                 }
             }
+
             CurrentSortColumnSetGlyph(headerClicked.Column, listView);
         }
-
-        public static void CurrentSortColumnSetGlyph(GridViewColumn gvc, ListView lv)
-        {
-            ListSortDirection lsd;
-            Brush brush;
-            if (lv == null)
-            {
-                lsd = ListSortDirection.Ascending;
-                brush = Brushes.Transparent;
-            }
-            else
-            {
-                SortDescriptionCollection sdc = lv.Items.SortDescriptions;
-                if (sdc == null || sdc.Count < 1) return;
-                lsd = sdc[0].Direction;
-                brush = Brushes.Gray;
-            }
-
-            FrameworkElementFactory fefGlyph =
-                new FrameworkElementFactory(typeof(Path));
-            fefGlyph.Name = "arrow";
-            fefGlyph.SetValue(Path.StrokeThicknessProperty, 1.0);
-            fefGlyph.SetValue(Path.FillProperty, brush);
-            fefGlyph.SetValue(StackPanel.HorizontalAlignmentProperty,
-                HorizontalAlignment.Center);
-
-            int s = 4;
-            if (lsd == ListSortDirection.Ascending)
-            {
-                PathFigure pf = new PathFigure();
-                pf.IsClosed = true;
-                pf.StartPoint = new Point(0, s);
-                pf.Segments.Add(new LineSegment(new Point(s * 2, s), false));
-                pf.Segments.Add(new LineSegment(new Point(s, 0), false));
-
-                PathGeometry pg = new PathGeometry();
-                pg.Figures.Add(pf);
-
-                fefGlyph.SetValue(Path.DataProperty, pg);
-            }
-            else
-            {
-                PathFigure pf = new PathFigure();
-                pf.IsClosed = true;
-                pf.StartPoint = new Point(0, 0);
-                pf.Segments.Add(new LineSegment(new Point(s, s), false));
-                pf.Segments.Add(new LineSegment(new Point(s * 2, 0), false));
-
-                PathGeometry pg = new PathGeometry();
-                pg.Figures.Add(pf);
-
-                fefGlyph.SetValue(Path.DataProperty, pg);
-            }
-
-            FrameworkElementFactory fefTextBlock =
-                new FrameworkElementFactory(typeof(TextBlock));
-            fefTextBlock.SetValue(TextBlock.HorizontalAlignmentProperty,
-                HorizontalAlignment.Center);
-            fefTextBlock.SetValue(TextBlock.TextProperty, new Binding());
-
-            FrameworkElementFactory fefDockPanel =
-                new FrameworkElementFactory(typeof(StackPanel));
-            fefDockPanel.SetValue(StackPanel.OrientationProperty,
-                Orientation.Horizontal);
-            fefDockPanel.AppendChild(fefTextBlock);
-            fefDockPanel.AppendChild(fefGlyph);
-
-
-            DataTemplate dt = new DataTemplate(typeof(GridViewColumn));
-            dt.VisualTree = fefDockPanel;
-
-            gvc.HeaderTemplate = dt;
-        }
-
-        #endregion
-
-        #region Helper methods
-
-        public static T GetAncestor<T>(DependencyObject reference) where T : DependencyObject
-        {
-            T targetParent = null;
-            do
-            {
-                reference = (reference is Visual || reference is Visual3D) ? 
-                    VisualTreeHelper.GetParent(reference) : 
-                    LogicalTreeHelper.GetParent(reference);
-                targetParent = reference as T;
-            } while (targetParent == null);
-            return targetParent;
-        }
-
-        #endregion
     }
 }
