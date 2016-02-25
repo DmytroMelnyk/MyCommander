@@ -79,8 +79,6 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Management" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -90,9 +88,9 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
-    <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -102,14 +100,8 @@
     <Compile Include="Converters\AttributeConverter.cs" />
     <Compile Include="Converters\FileAttributesExtension.cs" />
     <Compile Include="Converters\FileSystemInfoWrapperToImage.cs" />
-    <Compile Include="Helpers\DriveEventArgs.cs" />
-    <Compile Include="Helpers\FileManager.cs" />
-    <Compile Include="Helpers\FolderManager.cs" />
     <Compile Include="Helpers\GridViewSort.cs" />
-    <Compile Include="Helpers\Interop.cs" />
     <Compile Include="Helpers\ObservableDriveCollection.cs" />
-    <Compile Include="Helpers\ShellManager.cs" />
-    <Compile Include="Helpers\SystemDriveWatcher.cs" />
     <Compile Include="Validators\DirectoryExistAttribute.cs" />
     <Compile Include="ViewModels\ValidationError.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
@@ -173,6 +165,10 @@
     <ProjectReference Include="..\CommanderControl\CommanderControl.csproj">
       <Project>{eea4cbd4-fd4c-43f8-9be3-94a365d1d797}</Project>
       <Name>CommanderControl</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SystemLibrary\SystemLibrary.csproj">
+      <Project>{422ad6ed-628b-41d2-874d-2ff8f205b2b5}</Project>
+      <Name>SystemLibrary</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

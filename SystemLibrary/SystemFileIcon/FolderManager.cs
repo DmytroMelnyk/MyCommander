@@ -1,21 +1,17 @@
-﻿using System.Windows.Media;
-using System.Runtime.InteropServices;
-using System;
-using System.Windows.Media.Imaging;
+﻿using System.Windows;
 using System.Windows.Interop;
-using System.IO;
-using System.Drawing;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace MyCommander
 {
-
     public static class FolderManager
     {
         public static ImageSource GetImageSource(string directory, ItemState folderType)
         {
             try
             {
-                return FolderManager.GetImageSource(directory, new Size(16, 16), folderType);
+                return GetImageSource(directory, new Size(16, 16), folderType);
             }
             catch
             {

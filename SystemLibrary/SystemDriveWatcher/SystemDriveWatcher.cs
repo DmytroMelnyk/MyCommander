@@ -1,13 +1,9 @@
-﻿using MyCommander.UserControls;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System;
 using System.Management;
-using System.Windows.Data;
 
 namespace MyCommander.Helpers
 {
-    internal class SystemDriveWatcher : IDisposable
+    public class SystemDriveWatcher : IDisposable
     {
         private const string WatcherConnectedQuery = "SELECT * FROM Win32_VolumeChangeEvent WHERE EventType = 2";
         private const string WatcherDisconnectedQuery = "SELECT * FROM Win32_VolumeChangeEvent WHERE EventType = 3";

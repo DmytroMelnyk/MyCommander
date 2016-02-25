@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Management;
 using System.Windows.Data;
 
 namespace MyCommander.Helpers
