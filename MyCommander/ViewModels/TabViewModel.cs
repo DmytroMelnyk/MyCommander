@@ -13,18 +13,13 @@ namespace MyCommander.UserControls
     {
         public TabViewModel()
         {
-            string currentDirectory = Drives.First(drive => drive.IsReady).Name;
-            CurrentDirectory = Path.GetFullPath(currentDirectory);
-
-            CurrentDisk = Drives.Single(item => item.Name == Path.GetPathRoot(CurrentDirectory));
-            CurrentDisk.IsCurrentDrive = true;
+            CurrentDirectory = Drives.First(drive => drive.IsReady).Name;
         }
 
-        static ObservableDriveCollection _Drives = new ObservableDriveCollection();
+        ObservableDriveCollection _Drives = new ObservableDriveCollection();
         public ObservableDriveCollection Drives
         {
             get { return _Drives; }
-            set { Set(ref _Drives, value); }
         }
 
         ObservableDirectory _FDICollection;
@@ -49,9 +44,17 @@ namespace MyCommander.UserControls
             get { return _CurrentDirectory; }
             set
             {
-                if (ValidateProperty(value, false))
+                if (ValidateProperty(value, notifyErrorChanged: false))
                 {
-                    Set(ref _CurrentDirectory, value, false);
+                    Set(ref _CurrentDirectory, value, validateProperty: false);
+                    if (CurrentDisk != null)
+                    {
+                        CurrentDisk.IsCurrentDrive = false;
+                    }
+                    int idx = Drives.BinarySearch(new DriveViewModel(CurrentDirectory));
+                    var curDrive = Drives[idx];
+                    curDrive.IsCurrentDrive = true;
+                    CurrentDisk = curDrive;
                     FDICollection?.Dispose();
                     FDICollection = new ObservableDirectory(new DirectoryInfo(CurrentDirectory));
                 }
@@ -98,6 +101,7 @@ namespace MyCommander.UserControls
 
         public void Dispose()
         {
+            Drives.Dispose();
             _FDICollection?.Dispose();
         }
     }

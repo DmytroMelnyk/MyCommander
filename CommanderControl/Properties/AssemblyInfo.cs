@@ -10,7 +10,7 @@ using System.Windows;
 [assembly: AssemblyTitle("CommanderControl")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Software Solutions")]
 [assembly: AssemblyProduct("CommanderControl")]
 [assembly: AssemblyCopyright("Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]

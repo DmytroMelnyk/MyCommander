@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Management;
 using System.Windows.Data;
 
@@ -20,18 +19,14 @@ namespace MyCommander.Helpers
 
     internal class SystemDriveWatcher : IDisposable
     {
+        private const string watcherConnectedQuery = "SELECT * FROM Win32_VolumeChangeEvent WHERE EventType = 2";
+        private const string watcherDisconnectedQuery = "SELECT * FROM Win32_VolumeChangeEvent WHERE EventType = 3";
+
         public event EventHandler<DriveEventArgs> DriveConnected;
         public event EventHandler<DriveEventArgs> DriveDisconnected;
 
-        ManagementEventWatcher _watcherConnected = new ManagementEventWatcher
-        {
-            Query = new WqlEventQuery("SELECT * FROM Win32_VolumeChangeEvent WHERE EventType = 2")
-        };
-
-        ManagementEventWatcher _watcherDisconnected = new ManagementEventWatcher
-        {
-            Query = new WqlEventQuery("SELECT * FROM Win32_VolumeChangeEvent WHERE EventType = 3")
-        };
+        ManagementEventWatcher _watcherConnected = new ManagementEventWatcher(new WqlEventQuery(watcherConnectedQuery));
+        ManagementEventWatcher _watcherDisconnected = new ManagementEventWatcher(new WqlEventQuery(watcherDisconnectedQuery));
 
         public SystemDriveWatcher()
         {
@@ -60,6 +55,12 @@ namespace MyCommander.Helpers
         {
             _watcherConnected.Dispose();
             _watcherDisconnected.Dispose();
+        }
+
+        public void Stop()
+        {
+            _watcherConnected.Stop();
+            _watcherDisconnected.Stop();
         }
     }
 
@@ -98,6 +99,7 @@ namespace MyCommander.Helpers
 
         public void Dispose()
         {
+            _sdw.Stop();
             _sdw.Dispose();
         }
     }

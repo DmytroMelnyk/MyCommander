@@ -77,12 +77,8 @@
                         <RadioButton GroupName="{Binding Name, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                      Command="{Binding DataContext.ChangeDiskCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                      IsChecked="{Binding IsCurrentDrive}"
-                                     CommandParameter="{Binding}">
-                            <RadioButton.Style>
-                                <Style TargetType="{x:Type RadioButton}"
-                                       BasedOn="{StaticResource {x:Type ToggleButton}}" />
-                            </RadioButton.Style>
-
+                                     CommandParameter="{Binding}"
+                                     Style="{StaticResource {x:Type ToggleButton}}">
                             <RadioButton.Content>
                                 <StackPanel Orientation="Horizontal">
                                     <Image Source="{Binding Converter={StaticResource fSIWToImageConverter}}" />
@@ -131,7 +127,7 @@
                 <Style TargetType="{x:Type ListViewItem}">
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Path=(Selector.IsSelectionActive)}"
-                                     Value="false">
+                                     Value="False">
                             <Setter Property="IsSelected"
                                     Value="False" />
                         </DataTrigger>

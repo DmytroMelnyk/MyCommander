@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Practices.Prism.Commands;
+using MyCommander.Helpers;
 
 namespace MyCommander.ViewModels
 {
@@ -64,6 +66,18 @@ namespace MyCommander.ViewModels
         {
             tabModelView1.Dispose();
             tabModelView2.Dispose();
+        }
+
+        DelegateCommand _DisposeCommand;
+        public DelegateCommand DisposeCommand
+        {
+            get
+            {
+                return _DisposeCommand ?? (_DisposeCommand = new DelegateCommand
+                    (
+                        () => Dispose()
+                    ));
+            }
         }
     }
 }

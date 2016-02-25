@@ -4,9 +4,18 @@
         xmlns:local="clr-namespace:MyCommander.ViewModels"
         xmlns:uctrl="clr-namespace:CommanderControl;assembly=CommanderControl"
         xmlns:controls="clr-namespace:MyCommander.UserControls"
+        xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         Title="MainWindow"
         Height="350"
         Width="525">
+    
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Closed">
+            <i:InvokeCommandAction Command="{Binding DisposeCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
     <Window.DataContext>
         <local:MainViewModel />
     </Window.DataContext>
