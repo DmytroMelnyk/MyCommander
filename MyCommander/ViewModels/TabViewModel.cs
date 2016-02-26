@@ -74,17 +74,17 @@ namespace MyCommander.UserControls
             get
             {
                 return this.doubleClickCommand ?? (this.doubleClickCommand = new DelegateCommand(
-                        () =>
+                    () =>
+                    {
+                        if (this.SelectedItem.IsDirectory)
                         {
-                            if (this.SelectedItem.IsDirectory)
-                            {
-                                this.CurrentDirectory = this.SelectedItem.FullName;
-                            }
-                            else
-                            {
-                                Process.Start(this.SelectedItem.FullName);
-                            }
-                        }));
+                            this.CurrentDirectory = this.SelectedItem.FullName;
+                        }
+                        else
+                        {
+                            Process.Start(this.SelectedItem.FullName);
+                        }
+                    }));
             }
         }
 
