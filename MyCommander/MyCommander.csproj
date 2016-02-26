@@ -67,15 +67,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Expression.Interactions, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
-    <Reference Include="Microsoft.Practices.Prism.Mvvm">
-      <HintPath>..\packages\Prism.Mvvm.1.1.1\lib\net45\Microsoft.Practices.Prism.Mvvm.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Practices.Prism.Mvvm.Desktop">
-      <HintPath>..\packages\Prism.Mvvm.1.1.1\lib\net45\Microsoft.Practices.Prism.Mvvm.Desktop.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Practices.Prism.SharedInterfaces">
-      <HintPath>..\packages\Prism.Mvvm.1.1.1\lib\net45\Microsoft.Practices.Prism.SharedInterfaces.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
@@ -102,9 +93,6 @@
     <Compile Include="Converters\FileSystemInfoWrapperToImage.cs" />
     <Compile Include="Helpers\GridViewSort.cs" />
     <Compile Include="Helpers\ObservableDriveCollection.cs" />
-    <Compile Include="Validators\DirectoryExistAttribute.cs" />
-    <Compile Include="ViewModels\ValidationError.cs" />
-    <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="Helpers\ObservableDirectory.cs" />
     <Compile Include="UserControls\CommanderTab.xaml.cs">
       <DependentUpon>CommanderTab.xaml</DependentUpon>
@@ -162,9 +150,13 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CommanderControl\CommanderControl.csproj">
+    <ProjectReference Include="..\CommanderControl\SplitContainer.csproj">
       <Project>{eea4cbd4-fd4c-43f8-9be3-94a365d1d797}</Project>
-      <Name>CommanderControl</Name>
+      <Name>SplitContainer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MVVMBase\MVVMBase.csproj">
+      <Project>{7e8354bf-432e-490e-a12d-26e45d5810ca}</Project>
+      <Name>MVVMBase</Name>
     </ProjectReference>
     <ProjectReference Include="..\SystemLibrary\SystemLibrary.csproj">
       <Project>{422ad6ed-628b-41d2-874d-2ff8f205b2b5}</Project>

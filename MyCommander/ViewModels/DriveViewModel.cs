@@ -137,5 +137,10 @@ namespace MyCommander.UserControls
 
             return this.Name.CompareTo(other.Name);
         }
+
+        protected override IEnumerable<string> GetCustomErrorMessages<T>(string propertyName, T propertyValue)
+        {
+            return null;
+        }
     }
 }

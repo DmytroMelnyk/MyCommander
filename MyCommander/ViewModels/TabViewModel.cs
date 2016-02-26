@@ -1,10 +1,11 @@
-﻿using Microsoft.Practices.Prism.Commands;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using MyCommander.Validators;
 using MyCommander.Helpers;
+using System.Collections.Generic;
+using System.Windows.Input;
 
 namespace MyCommander.UserControls
 {
@@ -14,7 +15,7 @@ namespace MyCommander.UserControls
         private ObservableDirectory fDICollection;
         private FileSystemViewModel selectedItem;
         private string currentDirectory;
-        private DelegateCommand doubleClickCommand;
+        private ICommand doubleClickCommand;
         private DriveViewModel currentDisk;
         private DelegateCommand<DriveViewModel> changeDiskCommand;
 
@@ -68,7 +69,7 @@ namespace MyCommander.UserControls
             }
         }
 
-        public DelegateCommand DoubleClickCommand
+        public ICommand DoubleClickCommand
         {
             get
             {
@@ -108,6 +109,11 @@ namespace MyCommander.UserControls
         {
             this.Drives.Dispose();
             this.fDICollection?.Dispose();
+        }
+
+        protected override IEnumerable<string> GetCustomErrorMessages<T>(string propertyName, T propertyValue)
+        {
+            return null;
         }
     }
 }

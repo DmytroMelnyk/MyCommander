@@ -45,19 +45,6 @@ namespace MyCommander
             return this.Errors.Where(e => e.PropertyName == propertyName).Select(e => e.Message);
         }
 
-        protected virtual IEnumerable<string> GetErrorMessages<T>(string propertyName, T propertyValue)
-        {
-            ValidationContext context;
-            if (!this.ValidationDictionary.TryGetValue(propertyName, out context))
-            {
-                return null;
-            }
-
-            var results = new List<ValidationResult>();
-            Validator.TryValidateProperty(propertyValue, context, results);
-            return results.Select(item => item.ErrorMessage);
-        }
-
         protected bool ValidateProperty<T>(T propertyValue, bool notifyErrorChanged = true, [CallerMemberName]string propertyName = null)
         {
             var messages = this.GetErrorMessages(propertyName, propertyValue);
@@ -99,6 +86,54 @@ namespace MyCommander
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Gets the custom error messages.
+        /// </summary>
+        /// <typeparam name="T">property type</typeparam>
+        /// <param name="propertyName">Name of the property.</param>
+        /// <param name="propertyValue">The property value.</param>
+        /// <returns>Should return null for properties that are not checked.
+        /// <para>Enumerable.Emptylt;stringgt; if property is fine</para>
+        /// <para>IEnumerablelt;stringgt; if property is has errors</para>
+        /// </returns>
+        protected abstract IEnumerable<string> GetCustomErrorMessages<T>(string propertyName, T propertyValue);
+
+        private IEnumerable<string> GetErrorMessages<T>(string propertyName, T propertyValue)
+        {
+            var errorMessagesForAttributes = this.GetErrorMessagesForAttributes(propertyName, propertyValue);
+            var customErrorMessages = this.GetCustomErrorMessages(propertyName, propertyValue);
+
+            if (errorMessagesForAttributes == null && customErrorMessages == null)
+            {
+                return null;
+            }
+            else if (errorMessagesForAttributes == null)
+            {
+                return customErrorMessages;
+            }
+            else if (customErrorMessages == null)
+            {
+                return errorMessagesForAttributes;
+            }
+            else
+            {
+                return customErrorMessages.Concat(errorMessagesForAttributes);
+            }
+        }
+
+        private IEnumerable<string> GetErrorMessagesForAttributes<T>(string propertyName, T propertyValue)
+        {
+            ValidationContext context;
+            if (!this.ValidationDictionary.TryGetValue(propertyName, out context))
+            {
+                return null;
+            }
+
+            var results = new List<ValidationResult>();
+            Validator.TryValidateProperty(propertyValue, context, results);
+            return results.Select(item => item.ErrorMessage);
         }
     }
 }

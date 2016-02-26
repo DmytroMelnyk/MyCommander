@@ -3,7 +3,8 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Practices.Prism.Commands;
+using System.Collections.Generic;
+using System.Windows.Input;
 
 namespace MyCommander.ViewModels
 {
@@ -12,7 +13,7 @@ namespace MyCommander.ViewModels
         private TabViewModel tabModelView1 = new TabViewModel();
         private TabViewModel tabModelView2 = new TabViewModel();
         private TabViewModel activeTab;
-        private DelegateCommand disposeCommand;
+        private ICommand disposeCommand;
 
         public MainViewModel()
         {
@@ -35,7 +36,7 @@ namespace MyCommander.ViewModels
             set { this.Set(ref this.activeTab, value); }
         }
 
-        public DelegateCommand DisposeCommand
+        public ICommand DisposeCommand
         {
             get
             {
@@ -48,6 +49,11 @@ namespace MyCommander.ViewModels
         {
             this.tabModelView1.Dispose();
             this.tabModelView2.Dispose();
+        }
+
+        protected override IEnumerable<string> GetCustomErrorMessages<T>(string propertyName, T propertyValue)
+        {
+            return null;
         }
 
         private static async Task CopyFiles(string sourceFileName, string targetFileName, CancellationToken ct, IProgress<double> progress)
