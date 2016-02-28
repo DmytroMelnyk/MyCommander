@@ -5,12 +5,12 @@
              xmlns:controls="clr-namespace:MyCommander.UserControls"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-        <local:AttributeConverter x:Key="attrConverter"/>
-        <local:FileSystemInfoWrapperToImage x:Key="fSIWToImageConverter"/>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="DialogServices/DialogViewResourceDictionary.xaml" />
+            </ResourceDictionary.MergedDictionaries>
 
-        <DataTemplate DataType="{x:Type controls:TabViewModel}">
-            <controls:CommanderTab />
-        </DataTemplate>
-        
+            <local:AttributeConverter x:Key="attrConverter"/>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

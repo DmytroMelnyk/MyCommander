@@ -1,47 +1,23 @@
 ﻿using System;
+using System.ComponentModel;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Media;
 
-namespace MyCommander.UserControls
+namespace MyCommander.ViewModels
 {
-    internal class FileSystemViewModel : IEquatable<FileSystemViewModel>
+    internal abstract class FileSystemViewModel : IEquatable<FileSystemViewModel>, INotifyPropertyChanged
     {
-        private FileSystemInfo fsi;
-        private bool? isCurrentDirectory;
-
-        public FileSystemViewModel(string path, bool? isCurrentDirectory = null)
-        {
-            this.FullName = Path.GetFullPath(path);
-            this.isCurrentDirectory = isCurrentDirectory;
-        }
-
-        public FileSystemViewModel(FileSystemInfo fsi, bool? isCurrentDirectory = null)
-            : this(fsi.FullName, isCurrentDirectory)
-        {
-        }
-
         public string FullName
         {
             get;
-            private set;
+            protected set;
         }
 
-        public bool? IsCurrentDirectory
-        {
-            get
-            {
-                if (this.IsDirectory)
-                {
-                    return this.isCurrentDirectory;
-                }
+        public abstract bool? IsCurrentDirectory { get; }
 
-                return null;
-            }
-        }
-
-        public bool IsDirectory
-        {
-            get { return File.GetAttributes(this.FullName).HasFlag(FileAttributes.Directory); }
-        }
+        public abstract bool IsDirectory { get; }
 
         public string Name
         {
@@ -53,18 +29,7 @@ namespace MyCommander.UserControls
             get { return this.FileSystemInfo.Extension; }
         }
 
-        public long? Length
-        {
-            get
-            {
-                if (this.IsDirectory)
-                {
-                    return null;
-                }
-
-                return ((FileInfo)this.FileSystemInfo).Length;
-            }
-        }
+        public abstract long? Length { get; }
 
         public DateTime CreationTime
         {
@@ -76,24 +41,12 @@ namespace MyCommander.UserControls
             get { return this.FileSystemInfo.Attributes; }
         }
 
-        private FileSystemInfo FileSystemInfo
-        {
-            get
-            {
-                if (this.fsi == null)
-                {
-                    if (this.IsDirectory)
-                    {
-                        this.fsi = new DirectoryInfo(this.FullName);
-                    }
-                    else
-                    {
-                        this.fsi = new FileInfo(this.FullName);
-                    }
-                }
+        protected abstract FileSystemInfo FileSystemInfo { get; }
 
-                return this.fsi;
-            }
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         public override bool Equals(object obj)
@@ -115,6 +68,8 @@ namespace MyCommander.UserControls
 
             return this.Equals((FileSystemViewModel)obj);
         }
+
+        public abstract void Rename(string fullPath);
 
         public override int GetHashCode()
         {
@@ -140,5 +95,22 @@ namespace MyCommander.UserControls
         {
             return this.FullName;
         }
+
+        public abstract ImageSource Icon { get; }
+
+        public abstract Task CopyTo(DirectoryViewModel targetDirectory, CancellationToken ct, IProgress<double> progress);
+
+        public static FileSystemViewModel GetFileSystemViewModel(string path, bool isCurrentDirectory = false)
+        {
+            string fullPath = Path.GetFullPath(path);
+            if (File.GetAttributes(fullPath).HasFlag(FileAttributes.Directory))
+            {
+                return new DirectoryViewModel(fullPath, isCurrentDirectory);
+            }
+
+            return new FileViewModel(fullPath);
+        }
+
+        public abstract void Update();
     }
 }

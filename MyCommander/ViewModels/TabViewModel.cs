@@ -6,6 +6,7 @@ using MyCommander.Validators;
 using MyCommander.Helpers;
 using System.Collections.Generic;
 using System.Windows.Input;
+using MyCommander.ViewModels;
 
 namespace MyCommander.UserControls
 {
@@ -74,17 +75,17 @@ namespace MyCommander.UserControls
             get
             {
                 return this.doubleClickCommand ?? (this.doubleClickCommand = new DelegateCommand(
-                    () =>
-                    {
-                        if (this.SelectedItem.IsDirectory)
+                        () =>
                         {
-                            this.CurrentDirectory = this.SelectedItem.FullName;
-                        }
-                        else
-                        {
-                            Process.Start(this.SelectedItem.FullName);
-                        }
-                    }));
+                            if (this.SelectedItem.IsDirectory)
+                            {
+                                this.CurrentDirectory = this.SelectedItem.FullName;
+                            }
+                            else
+                            {
+                                Process.Start(this.SelectedItem.FullName);
+                            }
+                        }));
             }
         }
 

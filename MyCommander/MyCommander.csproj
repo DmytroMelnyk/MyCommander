@@ -96,9 +96,21 @@
     </ApplicationDefinition>
     <Compile Include="Converters\AttributeConverter.cs" />
     <Compile Include="Converters\FileAttributesExtension.cs" />
-    <Compile Include="Converters\FileSystemInfoWrapperToImage.cs" />
+    <Compile Include="DialogServices\DialogService.cs" />
+    <Compile Include="DialogServices\DialogView.xaml.cs">
+      <DependentUpon>DialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DialogServices\IDialogService.cs" />
+    <Compile Include="Helpers\CollectionExtension.cs" />
     <Compile Include="Helpers\GridViewSort.cs" />
     <Compile Include="Helpers\ObservableDriveCollection.cs" />
+    <Compile Include="Helpers\PathHelper.cs" />
+    <Compile Include="UserControls\CopyFileView.xaml.cs">
+      <DependentUpon>CopyFileView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\CopyFileViewModel.cs" />
+    <Compile Include="ViewModels\DirectoryViewModel.cs" />
+    <Compile Include="ViewModels\FileViewModel.cs" />
     <Compile Include="Helpers\ObservableDirectory.cs" />
     <Compile Include="UserControls\CommanderTab.xaml.cs">
       <DependentUpon>CommanderTab.xaml</DependentUpon>
@@ -107,6 +119,14 @@
     <Compile Include="ViewModels\FileSystemViewModel.cs" />
     <Compile Include="ViewModels\TabViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
+    <Page Include="DialogServices\DialogView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DialogServices\DialogViewResourceDictionary.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -120,6 +140,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="UserControls\CommanderTab.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\CopyFileView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

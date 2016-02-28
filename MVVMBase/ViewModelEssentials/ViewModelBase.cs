@@ -5,12 +5,14 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Windows.Input;
 
 namespace MyCommander
 {
     [Serializable]
     public abstract class ViewModelBase : INotifyPropertyChanged, INotifyDataErrorInfo
     {
+        private ICommand closeCommand;
         private Dictionary<string, ValidationContext> validationDictionary;
 
         [field: NonSerialized]
@@ -22,6 +24,12 @@ namespace MyCommander
         public bool HasErrors
         {
             get { return this.Errors.Any(); }
+        }
+
+        public ICommand CloseCommand
+        {
+            get { return this.closeCommand; }
+            set { this.Set(ref this.closeCommand, value); }
         }
 
         protected LinkedList<ValidationError> Errors { get; private set; } = new LinkedList<ValidationError>();
