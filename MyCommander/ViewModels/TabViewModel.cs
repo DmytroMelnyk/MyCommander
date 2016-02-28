@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using MyCommander.Validators;
 using MyCommander.Helpers;
+using MyCommander.ViewModels;
 
 namespace MyCommander.UserControls
 {

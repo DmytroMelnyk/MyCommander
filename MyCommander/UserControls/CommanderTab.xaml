@@ -39,7 +39,7 @@
                     <Image.Style>
                         <Style TargetType="{x:Type Image}">
                             <Setter Property="Source"
-                                    Value="{Binding Converter={StaticResource fSIWToImageConverter}}" />
+                                    Value="{Binding Icon}" />
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding IsCurrentDirectory}"
                                              Value="True">
@@ -81,7 +81,7 @@
                                      Style="{StaticResource {x:Type ToggleButton}}">
                             <RadioButton.Content>
                                 <StackPanel Orientation="Horizontal">
-                                    <Image Source="{Binding Converter={StaticResource fSIWToImageConverter}}" />
+                                    <Image Source="{Binding Icon}" />
                                     <TextBlock Text="{Binding Name}" />
                                     <ProgressBar Value="{Binding TotalFreeSpace, Mode=OneTime}"
                                                  Maximum="{Binding TotalSize, Mode=OneTime}"

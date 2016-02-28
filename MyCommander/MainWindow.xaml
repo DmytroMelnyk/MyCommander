@@ -9,6 +9,10 @@
         Title="MainWindow"
         Height="350"
         Width="525">
+
+    <Window.InputBindings>
+        <KeyBinding Key="F5" Command="{Binding CopyCommand}" />
+    </Window.InputBindings>
     
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Closed">
@@ -19,11 +23,7 @@
     <Window.DataContext>
         <local:MainViewModel />
     </Window.DataContext>
-
-    <Window.Resources>
-        <TextBlock x:Key="asda" Text="dsfsd"/>
-    </Window.Resources>
-    
+  
     <uctrl:TotalContainer x:Name="totCom"
                           SelectedTabContent="{Binding ActiveTab, Mode=TwoWay}"
                           FirstTabContent="{Binding TabViewModel1}"

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Windows.Media;
 
 namespace MyCommander.UserControls
 {
@@ -51,6 +52,11 @@ namespace MyCommander.UserControls
             {
                 return this.DriveInfo.IsReady ? this.DriveInfo.TotalSize : 0;
             }
+        }
+
+        public ImageSource Icon
+        {
+            get { return FolderManager.GetImageSource(this.Name, ItemState.Undefined); }
         }
 
         public static List<DriveViewModel> GetDrives()

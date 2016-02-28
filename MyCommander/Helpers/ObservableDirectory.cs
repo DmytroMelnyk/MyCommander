@@ -1,10 +1,12 @@
-﻿using MyCommander.UserControls;
+﻿using MyCommander.ViewModels;
+using MyCommander.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Windows.Data;
+using System.Collections.Specialized;
 
 namespace MyCommander
 {
@@ -19,7 +21,7 @@ namespace MyCommander
         {
             if (di.Parent != null)
             {
-                this.Add(new FileSystemViewModel(di.Parent, true));
+                this.Add(FileSystemViewModel.GetFileSystemViewModel(di.Parent.FullName, true));
             }
 
             BindingOperations.EnableCollectionSynchronization(this, this.locker);
@@ -28,27 +30,32 @@ namespace MyCommander
             this.fsw = new FileSystemWatcher(di.FullName)
             {
                 EnableRaisingEvents = true,
-                IncludeSubdirectories = false
+                IncludeSubdirectories = false,
             };
 
             this.fsw.Changed += (_, e) =>
             {
-                this.Remove(new FileSystemViewModel(e.FullPath));
-                this.Add(new FileSystemViewModel(e.FullPath));
+                this.Items.First(item => item.FullName == e.FullPath).Update();
             };
             this.fsw.Renamed += (_, e) =>
             {
-                this.Remove(new FileSystemViewModel(e.OldFullPath));
-                this.Add(new FileSystemViewModel(e.FullPath));
+                this.Items.FirstOrDefault(item => item.FullName == e.OldFullPath)?.Rename(e.FullPath);
             };
             this.fsw.Created += (_, e) =>
             {
                 if (!this.Any(item => item.FullName == e.FullPath))
                 {
-                    this.Add(new FileSystemViewModel(e.FullPath));
+                    this.Add(FileSystemViewModel.GetFileSystemViewModel(e.FullPath));
                 }
             };
-            this.fsw.Deleted += (_, e) => this.Remove(new FileSystemViewModel(e.FullPath));
+            this.fsw.Deleted += (_, e) =>
+            {
+                int index = this.IndexOf(item => item.FullName == e.FullPath);
+                if (index != -1)
+                {
+                    this.RemoveAt(index);
+                }
+            };
         }
 
         public void Dispose()
@@ -60,7 +67,7 @@ namespace MyCommander
         {
             return di.EnumerateFileSystemInfos().
                 Where(item => !item.Attributes.HasFlag(FileAttributes.ReparsePoint)).
-                Select(item => new FileSystemViewModel(item));
+                Select(item => FileSystemViewModel.GetFileSystemViewModel(item.FullName));
         }
     }
 }
