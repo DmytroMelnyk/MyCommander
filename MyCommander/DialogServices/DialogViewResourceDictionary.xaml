@@ -2,7 +2,10 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:view="clr-namespace:MyCommander.UserControls"
                     xmlns:vm="clr-namespace:MyCommander.ViewModels">
-    <DataTemplate DataType="{x:Type vm:CopyFileViewModel}">
-        <view:CopyFileView />
+    <DataTemplate DataType="{x:Type vm:CopyFileDialogViewModel}">
+        <view:CopyFileDialogView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:CopyFileProgressViewModel}">
+        <view:CopyFileProgressView />
     </DataTemplate>
 </ResourceDictionary>

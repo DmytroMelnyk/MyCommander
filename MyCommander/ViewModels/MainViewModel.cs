@@ -77,28 +77,10 @@ namespace MyCommander.ViewModels
                             }
                             else
                             {
-                                DialogService.Instance.ShowDialog(new CopyFileViewModel(this.ActiveTab.SelectedItem.Name, this.NonActiveTab.CurrentDirectory));
+                                DialogService.Instance.ShowDialog(new CopyFileDialogViewModel(this.ActiveTab.SelectedItem.Name, this.NonActiveTab.CurrentDirectory));
                             }
                         }));
             }
-        }
-
-        private static async Task CopyFileSystemItems(string sourceItem, string targetDirectory, CancellationToken ct, IProgress<double> progress)
-        {
-            string sourceName;
-            if (File.GetAttributes(sourceItem).HasFlag(FileAttributes.Directory))
-            {
-                sourceName = new DirectoryInfo(sourceItem).Name;
-                foreach (var file in Directory.EnumerateFileSystemEntries(sourceItem, "*.*", SearchOption.AllDirectories).
-                    Where(item => !File.GetAttributes(item).HasFlag(FileAttributes.Directory)))
-                {
-                    string resultPath = targetDirectory + sourceName + file.Remove(0, sourceItem.Length);
-                }
-
-                return;
-            }
-
-            sourceName = new FileInfo(sourceItem).Name;
         }
     }
 }
