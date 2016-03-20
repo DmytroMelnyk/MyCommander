@@ -29,6 +29,7 @@ namespace MyCommander
                 DataContext = viewModel
             };
             viewModel.CloseCommand = new DelegateCommand(dv.Close);
+            dv.Loaded += viewModel.OnLoaded;
             dv.Show();
         }
 

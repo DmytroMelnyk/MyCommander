@@ -7,7 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <StackPanel Margin="10">
-        <ProgressBar Margin="10" Height="30" Value="{Binding CurProgressValue}" Maximum="{Binding MaxProgressValue}"/>
+        <ProgressBar Margin="10" Height="30" Value="{Binding ProgressValue}" />
         <Button Content="Cancel" HorizontalAlignment="Center" Padding="5" Command="{Binding CancelCommand}"/>
     </StackPanel>
 </UserControl>

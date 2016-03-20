@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Windows;
 using System.Windows.Input;
 
 namespace MyCommander
@@ -30,6 +31,10 @@ namespace MyCommander
         {
             get { return this.closeCommand; }
             set { this.Set(ref this.closeCommand, value); }
+        }
+
+        public virtual void OnLoaded(object sender, EventArgs e)
+        {
         }
 
         protected LinkedList<ValidationError> Errors { get; private set; } = new LinkedList<ValidationError>();
@@ -103,8 +108,8 @@ namespace MyCommander
         /// <param name="propertyName">Name of the property.</param>
         /// <param name="propertyValue">The property value.</param>
         /// <returns>Should return null for properties that are not checked.
-        /// <para>Enumerable.Emptylt;stringgt; if property is fine</para>
-        /// <para>IEnumerablelt;stringgt; if property is has errors</para>
+        /// <para>Enumerable.Empty{string} if property is fine</para>
+        /// <para>IEnumerable{string} if property is has errors</para>
         /// </returns>
         protected abstract IEnumerable<string> GetCustomErrorMessages<T>(string propertyName, T propertyValue);
 

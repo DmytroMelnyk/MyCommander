@@ -5,12 +5,11 @@ namespace MyCommander.Validators
 {
     public class DirectoryExistAttribute : ValidationAttribute
     {
+        private readonly static ValidationResult PathShouldExist = new ValidationResult("Path should exist");
+
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            var strValue = value as string;
-
-            return Directory.Exists(strValue) ? ValidationResult.Success :
-                    new ValidationResult("Path should exist");
+            return Directory.Exists(value as string) ? ValidationResult.Success : PathShouldExist;
         }
     }
 }
