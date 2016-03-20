@@ -7,5 +7,7 @@ namespace MyCommander
         MessageBoxResult ShowMessageBox(string content, string title, MessageBoxButton buttons);
 
         bool? ShowDialog(ViewModelBase viewModel);
+
+        void Show(ViewModelBase viewModel);
     }
 }
