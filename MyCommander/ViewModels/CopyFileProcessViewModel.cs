@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -8,7 +9,7 @@ using System.Windows.Input;
 
 namespace MyCommander.ViewModels
 {
-    public class CopyFileProcessViewModel : ViewModelBase
+    public class CopyFileProgressViewModel : ViewModelBase
     {
         private int progressValue;
         private int currentItemIndex;
@@ -18,7 +19,7 @@ namespace MyCommander.ViewModels
         private IProgress<double> singleItemHandler;
         private IProgress<int> itemCollectionHandler;
 
-        public CopyFileProcessViewModel(string sourceItem, string targetPath, int totalItems)
+        public CopyFileProgressViewModel(string sourceItem, string targetPath, int totalItems)
         {
             this.TotalItems = totalItems;
             this.SourceItem = sourceItem;

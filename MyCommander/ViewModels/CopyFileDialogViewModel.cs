@@ -10,6 +10,7 @@ namespace MyCommander.ViewModels
 {
     public class CopyFileDialogViewModel : ViewModelBase
     {
+        private ICommand confirmCopyCommand;
         private string targetPath;
 
         public CopyFileDialogViewModel(string sourceFileName, string targetPath)
@@ -26,17 +27,16 @@ namespace MyCommander.ViewModels
 
         public string SourceFileName { get; private set; }
 
-        private ICommand confirmCopyCommand;
         public ICommand ConfirmCopyCommand
         {
             get
             {
                 return this.confirmCopyCommand ?? (this.confirmCopyCommand = new DelegateCommand(() =>
                 {
-                    DialogService.Instance.ShowDialog()
-                })
+                    // DialogService.Instance.ShowDialog()
+                }));
             }
-        } 
+        }
 
         protected override IEnumerable<string> GetCustomErrorMessages<T>(string propertyName, T propertyValue)
         {

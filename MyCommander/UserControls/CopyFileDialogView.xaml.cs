@@ -5,11 +5,11 @@ namespace MyCommander.UserControls
     /// <summary>
     /// Interaction logic for CopyFileView.xaml
     /// </summary>
-    public partial class CopyFileView : UserControl
+    public partial class CopyFileDialogView : UserControl
     {
-        public CopyFileView()
+        public CopyFileDialogView()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
     }
 }
