@@ -73,6 +73,8 @@ namespace CommanderControl
                     this.SelectedTabContent = this.SecondTabContent;
                 }
             });
+
+            base.OnApplyTemplate();
         }
     }
 }
