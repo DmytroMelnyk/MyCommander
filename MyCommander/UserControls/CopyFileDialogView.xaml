@@ -12,5 +12,10 @@
     <StackPanel Margin="10, 10">
         <TextBlock Text="{Binding SourceFileName}"/>
         <TextBox Text="{Binding TargetFileName}"/>
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Button>OK</Button>
+            <Button>Cancel</Button>
+        </StackPanel>
+        
     </StackPanel>
 </UserControl>

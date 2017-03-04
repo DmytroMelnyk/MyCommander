@@ -10,19 +10,26 @@ namespace MyCommander
 
         public event EventHandler CanExecuteChanged
         {
-            add { CommandManager.RequerySuggested += value; }
-            remove { CommandManager.RequerySuggested -= value; }
+            add
+            {
+                if (this.canExecuteMethod != null)
+                {
+                    CommandManager.RequerySuggested += value;
+                }
+            }
+            remove
+            {
+                if (this.canExecuteMethod != null)
+                {
+                    CommandManager.RequerySuggested -= value;
+                }
+            }
         }
 
-        public DelegateCommandBase(Action<object> executeMethod, Predicate<object> canExecuteMethod = null)
+        protected DelegateCommandBase(Action<object> executeMethod, Predicate<object> canExecuteMethod = null)
         {
             this.executeMethod = executeMethod;
             this.canExecuteMethod = canExecuteMethod;
-        }
-
-        public DelegateCommandBase(Action<object> executeMethod)
-        {
-            this.executeMethod = executeMethod;
         }
 
         public bool CanExecute(object parameter)

@@ -57,7 +57,7 @@ namespace CommanderControl
         public override void OnApplyTemplate()
         {
             this.tab1 = this.GetTemplateChild(PARTIDTab1) as ContentPresenter;
-            WeakEventManager<ContentPresenter, MouseButtonEventArgs>.AddHandler(this.tab1, nameof(this.tab1.PreviewMouseDown), (s, e) =>
+            WeakEventManager<ContentPresenter, MouseButtonEventArgs>.AddHandler(this.tab1, nameof(ContentPresenter.PreviewMouseDown), (s, e) =>
             {
                 if (this.SelectedTabContent == null || this.SelectedTabContent == this.SecondTabContent)
                 {
@@ -66,7 +66,7 @@ namespace CommanderControl
             });
 
             this.tab2 = this.GetTemplateChild(PARTIDTab2) as ContentPresenter;
-            WeakEventManager<ContentPresenter, MouseButtonEventArgs>.AddHandler(this.tab2, nameof(this.tab2.PreviewMouseDown), (s, e) =>
+            WeakEventManager<ContentPresenter, MouseButtonEventArgs>.AddHandler(this.tab2, nameof(ContentPresenter.PreviewMouseDown), (s, e) =>
             {
                 if (this.SelectedTabContent == null || this.SelectedTabContent == this.FirstTabContent)
                 {
